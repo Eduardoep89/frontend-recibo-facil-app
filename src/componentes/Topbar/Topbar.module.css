@@ -1,0 +1,25 @@
+.topbar_conteudo {
+    background-color: #12af2c;
+    position: fixed;
+    top: 0;
+    width: 80%;
+    height: 5vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+    
+   
+}
+
+.botao_deslogar {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 3.5vh;
+    margin-right: 40px;
+    transition: color 0.3s;
+}
+
+.botao_deslogar:hover {
+    color: #d81919;
+}

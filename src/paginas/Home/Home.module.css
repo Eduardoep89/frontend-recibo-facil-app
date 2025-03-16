@@ -1,0 +1,43 @@
+/* Home.module.css */
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .conteudo {
+    display: flex;
+    height: 100vh; /* Garantir que a altura da tela seja ocupada */
+  }
+  
+  .pagina_conteudo {
+    margin-left: 20%; /* Isso garante que o conteúdo não sobreponha a Sidebar */
+    margin-top: 10vh; /* Deixa espaço para o Topbar */
+    width: 80%; /* Define que o conteúdo ocupa o restante da tela */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .bem_vindo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+    opacity: 0; /* Inicialmente invisível */
+    animation: fadeIn 2s forwards; /* Aparece gradualmente em 2 segundos */
+  }
+  
+  .descricao {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.6;
+    opacity: 0; /* Inicialmente invisível */
+    animation: fadeIn 3s 0.5s forwards; /* Aparece após 0.5s de delay e leva 3 segundos */
+  }
+  

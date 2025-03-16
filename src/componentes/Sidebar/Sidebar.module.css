@@ -1,0 +1,29 @@
+.sidebar_conteudo {
+    background: linear-gradient(to bottom, #ffffff 16%, #ffffff 100%); /* Cinza Metálico para Azul Petróleo */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 21%;
+    height: 100%;
+    overflow-x: hidden;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.pagina_conteudo {
+    margin-left: 20%;
+}
+
+.sidebar_header {
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 20px 0;
+}
+.logo {
+    width: 70%;
+    height: auto;
+}
+
+.linha {
+    color: rgba(150, 150, 150, 0.6); /* Linha mais discreta */
+}
