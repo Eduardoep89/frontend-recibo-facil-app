@@ -1,13 +1,10 @@
 import style from "./Sidebar.module.css";
-import {
-  MdTask,
-  MdDesktopWindows,
-  MdGroup,
-  MdSort,
-  MdReplay,
-} from "react-icons/md";
+import { MdGroup } from "react-icons/md";
 import Logo from "../../assets/microservice.png";
 import { SidebarItem } from "../SidebarItem/SidebarItem";
+import { GiBoxUnpacking } from "react-icons/gi";
+import { FaFileInvoiceDollar } from "react-icons/fa6";
+import { PiLinkFill } from "react-icons/pi";
 
 export function Sidebar({ children }) {
   return (
@@ -19,22 +16,26 @@ export function Sidebar({ children }) {
         </div>
 
         <div className={style.sidebar_corpo}>
-          <SidebarItem texto="Clientes" link="/usuarios" logo={<MdGroup />} />
-          <SidebarItem texto="Produtos" link="/historias" logo={<MdSort />} />
+          <SidebarItem texto="Clientes" link="/clientes" logo={<MdGroup />} />
+          <SidebarItem
+            texto="Produtos"
+            link="/produtos"
+            logo={<GiBoxUnpacking />}
+          />
         </div>
         <div className={style.sidebar_corpo}>
           <SidebarItem
             texto="Recibo"
-            link="/projetos"
-            logo={<MdDesktopWindows />}
+            link="/recibos"
+            logo={<FaFileInvoiceDollar />}
           />
         </div>
 
         <div className={style.sidebar_corpo}>
           <SidebarItem
-            texto="Link Nota Fiscal"
-            link="/sprints"
-            logo={<MdReplay />}
+            texto="NF-e"
+            link="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/servicos-para-mei/nota-fiscal/nota-fiscal-de-servico-eletronica-nfs-e"
+            logo={<PiLinkFill />}
           />
         </div>
       </div>

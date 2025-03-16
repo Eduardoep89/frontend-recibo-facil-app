@@ -7,7 +7,7 @@
     color: #939393;
 
     & svg {
-        width: 30px;
+        width: 50px;
         height: 44px;
     }
 
@@ -18,6 +18,6 @@
     }
 
     &:hover {
-        color: #f08830;
+        color: #12af2c;
     }
 }
