@@ -12,8 +12,8 @@
 }
 
 .pagina_conteudo {
-    margin-left: 21%; /* Garante que o conteúdo não fique por trás do Sidebar */
-    padding-top: 10vh; /* Compensa a altura do Topbar */
+    margin-left: 19%; /* Garante que o conteúdo não fique por trás do Sidebar */
+    padding-top: 7vh; /* Compensa a altura do Topbar */
     transition: margin-left 0.3s ease;
 }
 

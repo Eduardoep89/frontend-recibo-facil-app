@@ -107,6 +107,7 @@ export function Clientes() {
                 <tr>
                   <th>Nome</th>
                   <th>Endereço</th>
+                  <th>Bairro</th>
                   <th>Cidade</th>
                   <th>Telefone</th>
                   <th>CNPJ/CPF</th>
@@ -121,6 +122,7 @@ export function Clientes() {
                     <tr key={cliente.id}>
                       <td>{cliente.nome}</td>
                       <td>{cliente.endereco}</td>
+                      <td>{cliente.bairro}</td>
                       <td>{cliente.cidade}</td>
                       <td>{cliente.telefone}</td>
                       <td>{cliente.cnpjCpf}</td>

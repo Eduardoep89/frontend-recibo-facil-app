@@ -34,7 +34,9 @@
 
 /* Efeito de Hover */
 .sidebar_item:hover {
+    transform: scale(1.1);
     color: #12af2c;
+    transition: transform 0.3s ease;
 }
 
 /* Responsividade */
