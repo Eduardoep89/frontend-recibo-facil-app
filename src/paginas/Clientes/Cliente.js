@@ -10,9 +10,9 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 export function Clientes() {
-  const [clientes, setClientes] = useState([]);
+  const [clientes, setClientes] = useState([]); // Armazena os 10 primeiros clientes
+  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Armazena os clientes filtrados
   const [filtro, setFiltro] = useState("");
-  const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const limparFiltro = filtro.length > 0;
@@ -43,37 +43,62 @@ export function Clientes() {
     setClienteSelecionado(null);
   };
 
-  const handleChangeFiltro = (e) => {
+  const handleChangeFiltro = async (e) => {
     const valor = e.target.value;
     setFiltro(valor);
 
-    // Filtra os clientes com base no nome ou CNPJ/CPF
-    const filtrados = clientes.filter(
-      (cliente) =>
-        cliente.nome.toLowerCase().includes(valor.toLowerCase()) ||
-        cliente.cnpjCpf.toLowerCase().includes(valor.toLowerCase())
-    );
-    setClientesFiltrados(filtrados);
+    if (valor) {
+      // Se houver filtro, busca todos os clientes que correspondam ao critério
+      try {
+        const clientesFiltrados = await ClienteApi.listarAsync(true); // Busca todos os clientes
+        const filtrados = clientesFiltrados.filter(
+          (cliente) =>
+            cliente.nome.toLowerCase().includes(valor.toLowerCase()) ||
+            cliente.cnpjCpf.toLowerCase().includes(valor.toLowerCase())
+        );
+        setClientesFiltrados(filtrados);
+      } catch (error) {
+        console.error("Erro ao filtrar clientes:", error);
+      }
+    } else {
+      // Se o filtro estiver vazio, volta a exibir os 10 primeiros clientes
+      setClientesFiltrados(clientes);
+    }
   };
 
   const handleClearFiltro = () => {
     setFiltro("");
-    setClientesFiltrados(clientes);
+    setClientesFiltrados(clientes); // Volta a exibir os 10 primeiros clientes
   };
 
   async function carregarClientes() {
     try {
-      const listaClientes = await ClienteApi.listarAsync(true);
-      setClientes(listaClientes);
-      setClientesFiltrados(listaClientes);
+      // Busca os 10 primeiros clientes
+      const listaClientes = await ClienteApi.listarTop10Async(); // Correção para chamar o método correto
+      console.log("Clientes retornados:", listaClientes); // Log para depuração
+
+      if (listaClientes && listaClientes.length > 0) {
+        setClientes(listaClientes); // Atualiza o estado com os 10 primeiros clientes
+        setClientesFiltrados(listaClientes); // Exibe os 10 primeiros clientes inicialmente
+      } else {
+        console.error("A resposta da API não contém clientes válidos.");
+      }
     } catch (error) {
-      console.error("Erro ao carregar clientes: ", error);
+      console.error("Erro ao carregar clientes:", error);
     }
   }
 
+  // Usando useEffect para carregar os 10 primeiros clientes ao montar o componente
   useEffect(() => {
     carregarClientes();
   }, []);
+
+  // Verifica se o filtro está vazio para voltar os clientes iniciais
+  useEffect(() => {
+    if (filtro === "") {
+      setClientesFiltrados(clientes); // Restaura a lista de clientes filtrados para os 10 primeiros
+    }
+  }, [clientes, filtro]); // Atualiza clientesFiltrados quando 'clientes' ou 'filtro' mudar
 
   return (
     <Sidebar>
@@ -111,7 +136,6 @@ export function Clientes() {
                   <th>Cidade</th>
                   <th>Telefone</th>
                   <th>CNPJ/CPF</th>
-
                   <th className={style.tabela_acoes}>Ações</th>
                 </tr>
               </thead>
@@ -126,7 +150,6 @@ export function Clientes() {
                       <td>{cliente.cidade}</td>
                       <td>{cliente.telefone}</td>
                       <td>{cliente.cnpjCpf}</td>
-
                       <td>
                         <div className={style.botoes_tabela}>
                           <Link
@@ -149,7 +172,7 @@ export function Clientes() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className={style.sem_registros}>
+                    <td colSpan="7" className={style.sem_registros}>
                       Nenhum cliente encontrado.
                     </td>
                   </tr>
