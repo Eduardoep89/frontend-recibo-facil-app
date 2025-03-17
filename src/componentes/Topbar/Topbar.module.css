@@ -1,17 +1,20 @@
+/* Estilos do Topbar */
 .topbar_conteudo {
     background-color: #12af2c;
     position: fixed;
     top: 0;
-    width: 80%;
+    left: 0;
+    width: calc(100% - 21%); /* Faz com que o Topbar ocupe toda a largura restante depois do Sidebar */
     height: 10vh;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-    
-   
+    z-index: 1; /* Coloca o topbar atrás do sidebar */
+    margin-left: 21%; /* Começa após o Sidebar */
 }
 
+/* Botão de deslogar */
 .botao_deslogar {
     text-decoration: none;
     color: #ffffff;
@@ -22,4 +25,29 @@
 
 .botao_deslogar:hover {
     color: #d81919;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .topbar_conteudo {
+        justify-content: center; /* Centraliza o conteúdo em telas menores */
+        height: 8vh; /* Reduz a altura para caber melhor */
+    }
+
+    .botao_deslogar {
+        font-size: 2.5vh; /* Diminui o tamanho da fonte */
+        margin-right: 1rem; /* Reduz o espaçamento lateral */
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar_conteudo {
+        height: 7vh; /* Altura menor para dispositivos móveis */
+        padding: 0 0.5rem;
+    }
+
+    .botao_deslogar {
+        font-size: 2vh; /* Fonte menor para caber na tela */
+        margin-right: 0.5rem;
+    }
 }

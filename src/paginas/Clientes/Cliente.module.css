@@ -1,0 +1,190 @@
+/* Estilos gerais da página */
+.pagina_conteudo {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+}
+
+/* Estilos da tabela */
+.tabela {
+    margin-top: 30px;
+}
+
+.tabela_corpo svg {
+    color: #212529;
+    margin: 5px;
+    font-size: 25px;
+}
+
+/* Ações da tabela */
+.tabela_acoes {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 20px;
+}
+
+/* Estilos dos botões de ação na tabela */
+.botao_editar {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Transição suave para o aumento */
+}
+
+.botao_editar svg {
+    color: #1d75b1; /* Ícone azul fora do hover */
+}
+
+.botao_editar:hover svg {
+    transform: scale(1.1); /* Aumenta levemente o ícone no hover */
+}
+
+.botao_deletar {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Transição suave para o aumento */
+}
+
+.botao_deletar svg {
+    color: #d81b15; /* Ícone vermelho fora do hover */
+}
+
+.botao_deletar:hover svg {
+    transform: scale(1.1); /* Aumenta levemente o ícone no hover */
+}
+
+.botoes_tabela {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0px; /* Espaçamento entre os botões */
+}
+
+/* Cabeçalho da página */
+.pagina_cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cabecalho_direito {
+    display: flex;
+    gap: 10px; /* Espaçamento entre o seletor e o botão */
+}
+
+/* Botão "Novo" */
+.botao_novo {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    background-color: #27ce2c; 
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Animação suave */
+}
+
+.botao_novo:hover {
+    background-color: #28a745; 
+    transform: scale(1.05); /* Aumenta levemente o botão */
+}
+
+/* Input de filtro */
+.input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input input {
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 20%;
+    margin-right: 10px;
+}
+
+.input button {
+    position: absolute;
+    border: none;    
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 220px;
+    margin-top: 4px;
+    font-size: small;
+    font-weight: bold;    
+    color: #000000;
+}
+
+/* Mensagem de nenhum registro encontrado */
+.sem_registros {
+    text-align: left;
+    color: #888;
+    font-style: italic;
+}
+
+/* Media Queries para responsividade */
+@media (max-width: 768px) {
+    .pagina_conteudo {
+        padding: 20px;
+    }
+
+    .pagina_cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cabecalho_direito {
+        margin-top: 10px;
+    }
+
+    .input input {
+        width: 50%;
+    }
+
+    .input button {
+        margin-left: 10px;
+    }
+
+    .tabela_acoes {
+        justify-content: flex-start;
+        margin-right: 0;
+    }
+
+    .botoes_tabela {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagina_conteudo {
+        padding: 10px;
+    }
+
+    .input input {
+        width: 70%;
+    }
+
+    .input button {
+        margin-left: 5px;
+    }
+
+    .botao_novo {
+        width: auto;
+        padding: 10px;
+    }
+
+    .tabela_corpo svg {
+        font-size: 20px;
+    }
+}

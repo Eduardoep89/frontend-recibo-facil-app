@@ -1,23 +1,74 @@
+/* Sidebar Item */
 .sidebar_item {
     text-decoration: none;
-
     display: flex;
+    align-items: center; /* Garante alinhamento vertical */
     margin: 20px;
-
     color: #939393;
+    transition: color 0.3s; /* Transição suave para hover */
+}
 
-    & svg {
-        width: 50px;
-        height: 44px;
+.sidebar_conteudo {
+    position: fixed;
+    top: 10vh; /* Para ficar abaixo da Topbar */
+    left: 0;
+    width: 20%; /* Ou outro valor adequado */
+    height: calc(100vh - 10vh); /* Ajusta a altura para não invadir a Topbar */
+    background-color: #333;
+    z-index: 999; /* Para garantir que fique abaixo da Topbar */
+}
+
+
+/* Ícones da Sidebar */
+.sidebar_item svg {
+    width: 50px;
+    height: 44px;
+}
+
+/* Texto do Link */
+.sidebar_item .texto_link {
+    margin: 10px;
+    font-size: 20px;
+    white-space: nowrap; /* Evita quebra de linha no texto */
+}
+
+/* Efeito de Hover */
+.sidebar_item:hover {
+    color: #12af2c;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar_item {
+        margin: 15px;
     }
 
+    .sidebar_item svg {
+        width: 40px;
+        height: 35px;
+    }
 
-    & .texto_link {
+    .sidebar_item .texto_link {
+        margin: 5px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar_item {
         margin: 10px;
-        font-size: 20px;
+        flex-direction: column; /* Ícone em cima do texto */
+        align-items: center; /* Centraliza o conteúdo */
     }
 
-    &:hover {
-        color: #12af2c;
+    .sidebar_item svg {
+        width: 35px;
+        height: 30px;
+    }
+
+    .sidebar_item .texto_link {
+        margin: 3px;
+        font-size: 16px;
+        text-align: center;
     }
 }

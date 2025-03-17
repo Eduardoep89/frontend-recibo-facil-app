@@ -1,29 +1,75 @@
+/* Sidebar */
 .sidebar_conteudo {
-    background: linear-gradient(to bottom, #ffffff 16%, #ffffff 100%); /* Cinza Metálico para Azul Petróleo */
+    background: linear-gradient(to bottom, #ffffff 16%, #ffffff 100%);
     position: fixed;
     top: 0;
-    bottom: 0;
-    width: 21%;
-    height: 100%;
+    left: 0;
+    width: 21%; /* Largura do Sidebar */
+    height: 100vh; /* O Sidebar vai ocupar toda a altura da tela */
     overflow-x: hidden;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+    z-index: 2; /* Sidebar acima do Topbar */
 }
 
 .pagina_conteudo {
-    margin-left: 20%;
+    margin-left: 21%; /* Garante que o conteúdo não fique por trás do Sidebar */
+    padding-top: 10vh; /* Compensa a altura do Topbar */
+    transition: margin-left 0.3s ease;
 }
 
 .sidebar_header {
     text-align: center;
-    color: #ffffff;
-    font-weight: bold;
     padding: 20px 0;
 }
+
 .logo {
-    width: 70%;
+    width: 70%; /* Tamanho padrão da logo */
     height: auto;
 }
 
-.linha {
-    color: rgba(150, 150, 150, 0.6); /* Linha mais discreta */
+/* Responsividade para tablets */
+@media screen and (max-width: 768px) {
+    .sidebar_conteudo {
+        width: 60px; /* Sidebar reduzida */
+    }
+
+    .pagina_conteudo {
+        margin-left: 60px; /* Ajuste para o conteúdo não ficar por trás da Sidebar */
+    }
+
+    .sidebar_item .texto_link {
+        display: none; /* Esconde o texto para ganhar espaço */
+    }
+
+    .sidebar_item svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .logo {
+        width: 50%; /* Logo menor para tablets */
+    }
+}
+
+/* Responsividade para dispositivos móveis */
+@media screen and (max-width: 480px) {
+    .sidebar_conteudo {
+        width: 100%; /* Sidebar ocupando toda a largura */
+        height: auto;
+        position: relative;
+        top: 0;
+    }
+
+    .pagina_conteudo {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .sidebar_item {
+        justify-content: center;
+    }
+
+    .logo {
+        width: 30%; /* Logo ainda menor para dispositivos móveis */
+    }
 }
