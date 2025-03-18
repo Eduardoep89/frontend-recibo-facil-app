@@ -113,7 +113,7 @@ export function Clientes() {
 
           <div className={style.input}>
             <input
-              placeholder="Filtrar..."
+              placeholder="Buscar por Nome ou CNPJ/CPF"
               type="text"
               name="filtro"
               value={filtro}

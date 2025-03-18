@@ -1,0 +1,229 @@
+/* Estilos gerais da página */
+.pagina_conteudo {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+}
+
+/* Estilos da tabela */
+.tabela {
+    margin-top: 30px;
+}
+
+.tabela_corpo svg {
+    color: #212529;
+    margin: 5px;
+    font-size: 25px;
+}
+
+/* Ações da tabela */
+.tabela_acoes {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 20px;
+}
+
+/* Estilos dos botões de ação na tabela */
+.botao_editar {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.botao_editar svg {
+    color: #1d75b1;
+}
+
+.botao_editar:hover svg {
+    transform: scale(1.1);
+}
+
+.botao_deletar {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.botao_deletar svg {
+    color: #d81b15;
+}
+
+.botao_deletar:hover svg {
+    transform: scale(1.1);
+}
+
+.botoes_tabela {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0px;
+}
+
+/* Cabeçalho da página */
+.pagina_cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cabecalho_direito {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botão "Novo" */
+.botao_novo {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    background-color: #27ce2c;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.botao_novo:hover {
+    background-color: #28a745;
+    transform: scale(1.05);
+}
+
+/* Filtros */
+.filtros {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+}
+
+.input input {
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 250px;
+    margin-right: 10px;
+}
+
+.input button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: small;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Estilos para o campo de busca de clientes */
+.buscaCliente {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.buscaCliente input {
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 250px;
+}
+
+.listaClientes {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.listaClientes li {
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.listaClientes li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Mensagem de nenhum registro encontrado */
+.sem_registros {
+    text-align: left;
+    color: #888;
+    font-style: italic;
+}
+
+/* Media Queries para responsividade */
+@media (max-width: 768px) {
+    .pagina_conteudo {
+        padding: 20px;
+    }
+
+    .pagina_cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cabecalho_direito {
+        margin-top: 10px;
+    }
+
+    .filtros {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input input,
+    .buscaCliente input,
+    .selectCliente select {
+        width: 100%;
+    }
+
+    .tabela_acoes {
+        justify-content: flex-start;
+        margin-right: 0;
+    }
+
+    .botoes_tabela {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagina_conteudo {
+        padding: 10px;
+    }
+
+    .botao_novo {
+        width: auto;
+        padding: 10px;
+    }
+
+    .tabela_corpo svg {
+        font-size: 20px;
+    }
+}
