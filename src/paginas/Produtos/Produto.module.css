@@ -177,6 +177,7 @@
     font-style: italic;
 }
 
+
 /* Media Queries para responsividade */
 @media (max-width: 768px) {
     .pagina_conteudo {

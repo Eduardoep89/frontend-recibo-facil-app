@@ -7,6 +7,7 @@ import { Recibos } from "./paginas/Recibos/Recibo";
 import { EditarCliente } from "./paginas/EditarCliente/EditarCliente";
 import { NovoCliente } from "./paginas/NovoCliente/NovoCliente";
 import { EditarProduto } from "./paginas/EditarProduto/EditarProduto";
+import { NovoProduto } from "./paginas/NovoProduto/NovoProduto";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cliente/editar" element={<EditarCliente />} />
         <Route path="/cliente/novo" element={<NovoCliente />} />
         <Route path="/produto/editar" element={<EditarProduto />} />
+        <Route path="/produto/novo" element={<NovoProduto />} />
       </Routes>
     </BrowserRouter>
   );

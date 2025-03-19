@@ -18,7 +18,7 @@ export function Sidebar({ children }) {
         <div className={style.sidebar_corpo}>
           <SidebarItem texto="Clientes" link="/clientes" logo={<MdGroup />} />
           <SidebarItem
-            texto="Produtos"
+            texto="Produtos/Serviços"
             link="/produtos"
             logo={<GiBoxUnpacking />}
           />

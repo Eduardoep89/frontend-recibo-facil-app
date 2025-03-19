@@ -48,22 +48,31 @@ export function Produtos() {
     setProdutoSelecionado(null);
   };
 
-  const handleChangeFiltro = (e) => {
+  const handleChangeFiltro = async (e) => {
     const valor = e.target.value;
     setFiltro(valor);
 
     if (valor) {
-      const filtrados = produtos.filter(
-        (produto) =>
-          produto.marca.toLowerCase().includes(valor.toLowerCase()) ||
-          produto.modelo.toLowerCase().includes(valor.toLowerCase())
-      );
-      setProdutosFiltrados(filtrados);
+      try {
+        // Busca todos os produtos ativos
+        const produtosAtivos = await ProdutoApi.listarAsync(true);
+        const filtrados = produtosAtivos.filter(
+          (produto) =>
+            produto.ativo && // Filtra apenas produtos ativos
+            (produto.marca.toLowerCase().includes(valor.toLowerCase()) ||
+              produto.modelo.toLowerCase().includes(valor.toLowerCase()))
+        );
+        setProdutosFiltrados(filtrados);
+      } catch (error) {
+        console.error("Erro ao filtrar produtos:", error);
+      }
     } else {
+      // Se o filtro estiver vazio, mostra todos os produtos ativos ou filtra por cliente
       if (clienteSelecionado) {
         filtrarPorCliente(clienteSelecionado.id);
       } else {
-        setProdutosFiltrados(produtos);
+        const produtosAtivos = await ProdutoApi.listarAsync(true); // Busca apenas produtos ativos
+        setProdutosFiltrados(produtosAtivos);
       }
     }
   };
@@ -109,13 +118,25 @@ export function Produtos() {
 
   async function carregarProdutos() {
     try {
-      const listaProdutos = await ProdutoApi.listarTop10ProdutosAsync();
-      setProdutos(listaProdutos);
-      setProdutosFiltrados(listaProdutos);
+      // Busca os 10 primeiros produtos
+      const listaProdutos = await ProdutoApi.listarTop10ProdutosAsync(); // Método para listar os 10 primeiros produtos
+      console.log("Produtos retornados:", listaProdutos); // Log para depuração
+
+      if (listaProdutos && listaProdutos.length > 0) {
+        setProdutos(listaProdutos); // Atualiza o estado com os 10 primeiros produtos
+        setProdutosFiltrados(listaProdutos); // Exibe os 10 primeiros produtos inicialmente
+      } else {
+        console.error("A resposta da API não contém produtos válidos.");
+      }
     } catch (error) {
-      console.error("Erro ao carregar produtos: ", error);
+      console.error("Erro ao carregar produtos:", error);
     }
   }
+
+  // Usando useEffect para carregar os 10 primeiros produtos ao montar o componente
+  useEffect(() => {
+    carregarProdutos();
+  }, []);
 
   async function carregarClientes() {
     try {
@@ -136,7 +157,7 @@ export function Produtos() {
       <Topbar>
         <div className={style.pagina_conteudo}>
           <div className={style.pagina_cabecalho}>
-            <h3>Produtos</h3>
+            <h3>Produtos/Serviços</h3>
             <Link to="/produto/novo" className={style.botao_novo}>
               + Novo
             </Link>
@@ -145,7 +166,7 @@ export function Produtos() {
           <div className={style.filtros}>
             <div className={style.input}>
               <input
-                placeholder="Buscar por Marca ou Modelo"
+                placeholder="Buscar por Marca ou Modelo..."
                 type="text"
                 name="filtro"
                 value={filtro}
@@ -160,7 +181,7 @@ export function Produtos() {
 
             <div className={style.buscaCliente}>
               <input
-                placeholder="Buscar Cliente por Nome"
+                placeholder="Buscar Cliente por Nome..."
                 type="text"
                 value={buscaCliente}
                 onChange={handleChangeBuscaCliente}
@@ -184,7 +205,7 @@ export function Produtos() {
             <Table responsive>
               <thead className={style.tabela_cabecalho}>
                 <tr>
-                  <th>Nome</th>
+                  <th>Descrição</th>
                   <th>Marca</th>
                   <th>Modelo</th>
                   <th>Preço</th>

@@ -24,3 +24,42 @@
 .botao_cancelar {
     margin-left: 10px;
 }
+/* Estilos para o campo de busca de clientes */
+.buscaCliente {
+    position: relative;
+}
+
+.buscaCliente input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.listaClientes {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.listaClientes li {
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.listaClientes li:hover {
+    background-color: #f0f0f0;
+}

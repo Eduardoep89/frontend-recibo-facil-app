@@ -74,12 +74,18 @@ export function Clientes() {
   async function carregarClientes() {
     try {
       // Busca os 10 primeiros clientes
-      const listaClientes = await ClienteApi.listarTop10Async(); // Correção para chamar o método correto
+      const listaClientes = await ClienteApi.listarTop10Async(); // Método para listar os 10 primeiros clientes
       console.log("Clientes retornados:", listaClientes); // Log para depuração
 
       if (listaClientes && listaClientes.length > 0) {
-        setClientes(listaClientes); // Atualiza o estado com os 10 primeiros clientes
-        setClientesFiltrados(listaClientes); // Exibe os 10 primeiros clientes inicialmente
+        // Filtra apenas os clientes ativos
+        const clientesAtivos = listaClientes.filter(
+          (cliente) => cliente.ativo === true
+        );
+
+        // Atualiza o estado com os clientes ativos
+        setClientes(clientesAtivos);
+        setClientesFiltrados(clientesAtivos); // Exibe os clientes ativos inicialmente
       } else {
         console.error("A resposta da API não contém clientes válidos.");
       }
@@ -96,7 +102,7 @@ export function Clientes() {
   // Verifica se o filtro está vazio para voltar os clientes iniciais
   useEffect(() => {
     if (filtro === "") {
-      setClientesFiltrados(clientes); // Restaura a lista de clientes filtrados para os 10 primeiros
+      setClientesFiltrados(clientes); // Restaura a lista de clientes filtrados para os clientes ativos
     }
   }, [clientes, filtro]); // Atualiza clientesFiltrados quando 'clientes' ou 'filtro' mudar
 
@@ -113,7 +119,7 @@ export function Clientes() {
 
           <div className={style.input}>
             <input
-              placeholder="Buscar por Nome ou CNPJ/CPF"
+              placeholder="Buscar por Nome ou CNPJ/CPF..."
               type="text"
               name="filtro"
               value={filtro}

@@ -19,7 +19,7 @@ export function EditarProduto() {
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [preco, setPreco] = useState("");
-  const [clienteId, setClienteId] = useState("");
+  const [clienteId, setClienteId] = useState(""); // Mantemos o clienteId, mas não permitimos edição
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
@@ -35,7 +35,7 @@ export function EditarProduto() {
           Marca: marca,
           Modelo: modelo,
           Preco: parseFloat(preco),
-          ClienteId: parseInt(clienteId),
+          ClienteId: parseInt(clienteId), // Mantemos o clienteId original
         };
         console.log("Dados enviados:", produtoAtualizar); // Verifique o payload
 
@@ -66,6 +66,7 @@ export function EditarProduto() {
     navigate("/produtos");
   };
 
+  // Busca os dados do produto ao carregar o componente
   useEffect(() => {
     const buscarDadosProduto = async () => {
       try {
@@ -74,7 +75,7 @@ export function EditarProduto() {
         setMarca(produto.marca);
         setModelo(produto.modelo);
         setPreco(produto.preco.toString());
-        setClienteId(produto.clienteId.toString());
+        setClienteId(produto.clienteId.toString()); // Define o clienteId, mas não exibimos para edição
       } catch (error) {
         console.error("Erro ao buscar dados do produto: ", error);
       }
@@ -84,21 +85,21 @@ export function EditarProduto() {
   }, [id]);
 
   const isFormValid = () => {
-    return nome && marca && modelo && preco && clienteId;
+    return nome && marca && modelo && preco; // Não precisamos validar o clienteId, pois ele não é editável
   };
 
   return (
     <Sidebar>
       <Topbar>
         <div className={style.pagina_conteudo}>
-          <h3>Editar Produto</h3>
+          <h3>Editar Produto/Serviço</h3>
           <Form onSubmit={handleSubmit}>
             {/* Campo Nome */}
             <Form.Group controlId="formNome" className="mb-3">
               <Form.Label>Nome</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite o nome"
+                placeholder="Digite a descrição"
                 name="nome"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
@@ -141,19 +142,6 @@ export function EditarProduto() {
                 name="preco"
                 value={preco}
                 onChange={(e) => setPreco(e.target.value)}
-                required
-              />
-            </Form.Group>
-
-            {/* Campo Cliente ID */}
-            <Form.Group controlId="formClienteId" className="mb-3">
-              <Form.Label>ID do Cliente</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Digite o ID do cliente"
-                name="clienteId"
-                value={clienteId}
-                onChange={(e) => setClienteId(e.target.value)}
                 required
               />
             </Form.Group>
