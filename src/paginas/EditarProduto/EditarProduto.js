@@ -96,7 +96,7 @@ export function EditarProduto() {
           <Form onSubmit={handleSubmit}>
             {/* Campo Nome */}
             <Form.Group controlId="formNome" className="mb-3">
-              <Form.Label>Nome</Form.Label>
+              <Form.Label>Descrição</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Digite a descrição"
