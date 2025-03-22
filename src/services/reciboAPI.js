@@ -61,7 +61,7 @@ const ReciboApi = {
   },
 
   // Listar os 10 últimos recibos
-  async listarTop10RecibosAsync() {
+  async listarTop10Async() {
     try {
       const response = await HTTPClient.get("/api/Recibo/ListarTop10");
       return response.data;
@@ -72,7 +72,7 @@ const ReciboApi = {
   },
 
   // Listar itens de um recibo por reciboId
-  async listarItensPorReciboIdAsync(reciboId) {
+  async listarItensAsync(reciboId) {
     try {
       const response = await HTTPClient.get(
         `/api/ItemRecibo/ListarPorRecibo/${reciboId}`
@@ -80,6 +80,41 @@ const ReciboApi = {
       return response.data;
     } catch (error) {
       console.error("Erro ao listar itens do recibo", error);
+      throw error;
+    }
+  },
+
+  // Adicionar um item ao recibo
+  async adicionarItemAsync(item) {
+    try {
+      const response = await HTTPClient.post("/api/ItemRecibo/Adicionar", item);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao adicionar item ao recibo", error);
+      throw error;
+    }
+  },
+
+  // Atualizar um item do recibo
+  async atualizarItemAsync(item) {
+    try {
+      const response = await HTTPClient.put("/api/ItemRecibo/Atualizar", item);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao atualizar item do recibo", error);
+      throw error;
+    }
+  },
+
+  // Deletar um item do recibo
+  async deletarItemAsync(itemId) {
+    try {
+      const response = await HTTPClient.delete(
+        `/api/ItemRecibo/Deletar/${itemId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao deletar item do recibo", error);
       throw error;
     }
   },
