@@ -3,54 +3,61 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Recibo.module.css";
 import ClienteApi from "../../services/clienteAPI";
-import ProdutoApi from "../../services/produtoAPI"; // Importe a API de produtos
-import microservice from "../../assets/microservice.png"; // Importe a logo
+import ProdutoApi from "../../services/produtoAPI";
+import ReciboApi from "../../services/reciboAPI";
+import microservice from "../../assets/microservice.png";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export function Recibos() {
-  // Estados para clientes
-  const [clientes, setClientes] = useState([]); // Lista completa de clientes
-  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Clientes filtrados pelo nome
-  const [clienteSelecionado, setClienteSelecionado] = useState(null); // Cliente selecionado
-  const [buscaCliente, setBuscaCliente] = useState(""); // Texto digitado no campo de busca de cliente
-  const [mostrarFiltro, setMostrarFiltro] = useState(true); // Controla a exibição do filtro
+  const hoje = new Date();
+  const dia = String(hoje.getDate()).padStart(2, "0");
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const ano = hoje.getFullYear();
+  const dataFormatada = `${dia}-${mes}-${ano}`;
+  const [data, setData] = useState(dataFormatada);
 
-  // Estados para produtos
-  const [produtosCliente, setProdutosCliente] = useState([]); // Lista de produtos do cliente
-  const [produtosFiltrados, setProdutosFiltrados] = useState([]); // Produtos filtrados pelo nome
-  const [produtoSelecionado, setProdutoSelecionado] = useState(null); // Produto selecionado
-  const [buscaProduto, setBuscaProduto] = useState(""); // Texto digitado no campo de busca de produto
-  const [produtos, setProdutos] = useState([]); // Lista de produtos adicionados
-  const [total, setTotal] = useState(0); // Total do recibo
+  const [clientes, setClientes] = useState([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [buscaCliente, setBuscaCliente] = useState("");
+  const [mostrarFiltro, setMostrarFiltro] = useState(true);
 
-  // Carregar clientes ao montar o componente
+  const [produtosCliente, setProdutosCliente] = useState([]);
+  const [produtosFiltrados, setProdutosFiltrados] = useState([]);
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  const [buscaProduto, setBuscaProduto] = useState("");
+  const [produtos, setProdutos] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  // Novo estado para controlar se o recibo foi salvo
+  const [reciboSalvo, setReciboSalvo] = useState(false);
+
   useEffect(() => {
     carregarClientes();
   }, []);
 
-  // Função para carregar clientes
   const carregarClientes = async () => {
     try {
-      const listaClientes = await ClienteApi.listarAsync(true); // Listar clientes ativos
+      const listaClientes = await ClienteApi.listarAsync(true);
       setClientes(listaClientes);
     } catch (error) {
       console.error("Erro ao carregar clientes:", error);
     }
   };
 
-  // Função para carregar produtos do cliente
   const carregarProdutosCliente = async (clienteId) => {
     try {
       const produtos = await ProdutoApi.listarProdutosPorClienteAsync(
         clienteId
-      ); // Usando a função correta da API
+      );
       setProdutosCliente(produtos);
-      setProdutosFiltrados(produtos); // Inicialmente, exibe todos os produtos
+      setProdutosFiltrados(produtos);
     } catch (error) {
       console.error("Erro ao carregar produtos do cliente:", error);
     }
   };
 
-  // Função para filtrar clientes pelo nome
   const handleChangeBuscaCliente = (e) => {
     const valor = e.target.value;
     setBuscaCliente(valor);
@@ -65,25 +72,22 @@ export function Recibos() {
     }
   };
 
-  // Função para selecionar um cliente
   const handleSelecionarCliente = (cliente) => {
     setClienteSelecionado(cliente);
-    setBuscaCliente(cliente.nome); // Preenche o campo de busca com o nome do cliente
-    setClientesFiltrados([]); // Fecha a lista suspensa
-    setMostrarFiltro(false); // Oculta o filtro após selecionar o cliente
-    carregarProdutosCliente(cliente.id); // Carrega os produtos do cliente selecionado
+    setBuscaCliente(cliente.nome);
+    setClientesFiltrados([]);
+    setMostrarFiltro(false);
+    carregarProdutosCliente(cliente.id);
   };
 
-  // Função para reabrir o filtro
   const reabrirFiltro = () => {
     setMostrarFiltro(true);
     setBuscaCliente("");
     setClienteSelecionado(null);
-    setProdutosCliente([]); // Limpa a lista de produtos
-    setProdutoSelecionado(null); // Limpa o produto selecionado
+    setProdutosCliente([]);
+    setProdutoSelecionado(null);
   };
 
-  // Função para filtrar produtos pelo nome
   const handleChangeBuscaProduto = (e) => {
     const valor = e.target.value;
     setBuscaProduto(valor);
@@ -94,17 +98,15 @@ export function Recibos() {
       );
       setProdutosFiltrados(filtrados);
     } else {
-      setProdutosFiltrados([]); // Fecha a lista se o campo estiver vazio
+      setProdutosFiltrados([]);
     }
   };
 
-  // Função para selecionar um produto
   const handleSelecionarProduto = (produto) => {
     setProdutoSelecionado(produto);
-    setBuscaProduto(""); // Limpa o campo de busca
-    setProdutosFiltrados([]); // Fecha a lista suspensa
+    setBuscaProduto("");
+    setProdutosFiltrados([]);
 
-    // Adiciona o produto à lista de produtos
     const novoProduto = {
       ...produto,
       quantidade: 1,
@@ -114,12 +116,10 @@ export function Recibos() {
     calcularTotal([...produtos, novoProduto]);
   };
 
-  // Função para atualizar um produto na lista
   const atualizarProduto = (index, campo, valor) => {
     const novosProdutos = [...produtos];
     novosProdutos[index][campo] = valor;
 
-    // Recalcula o subtotal se a quantidade ou o valor unitário mudar
     if (campo === "quantidade" || campo === "preco") {
       novosProdutos[index].subtotal =
         novosProdutos[index].quantidade * novosProdutos[index].preco;
@@ -129,13 +129,47 @@ export function Recibos() {
     calcularTotal(novosProdutos);
   };
 
-  // Função para calcular o total
   const calcularTotal = (produtos) => {
     const total = produtos.reduce((acc, produto) => acc + produto.subtotal, 0);
     setTotal(total);
   };
 
-  // Função para cancelar o recibo e limpar todos os dados
+  const salvarRecibo = async () => {
+    if (!clienteSelecionado || produtos.length === 0) {
+      alert(
+        "Selecione um cliente e adicione pelo menos um produto antes de salvar."
+      );
+      return;
+    }
+
+    try {
+      const recibo = {
+        numeroPedido: `PED${Date.now()}`,
+        data: new Date(data.split("-").reverse().join("-")).toISOString(),
+        descricao: "Recibo de venda",
+        clienteId: clienteSelecionado.id,
+        subtotal: total,
+        total: total,
+        itens: produtos.map((produto) => ({
+          produtoId: produto.id,
+          quantidade: produto.quantidade,
+          precoUnitario: produto.preco,
+          subtotal: produto.subtotal,
+        })),
+      };
+
+      const reciboSalvo = await ReciboApi.cadastrarAsync(recibo);
+      alert("Recibo salvo com sucesso!");
+      console.log("Recibo salvo:", reciboSalvo);
+
+      // Define que o recibo foi salvo
+      setReciboSalvo(true);
+    } catch (error) {
+      console.error("Erro ao salvar recibo:", error);
+      alert("Erro ao salvar recibo. Por favor, tente novamente.");
+    }
+  };
+
   const cancelarRecibo = () => {
     setClienteSelecionado(null);
     setProdutos([]);
@@ -144,6 +178,61 @@ export function Recibos() {
     setBuscaProduto("");
     setProdutosFiltrados([]);
     setMostrarFiltro(true);
+    setReciboSalvo(false); // Reseta o estado de recibo salvo
+  };
+
+  const gerarPDF = () => {
+    const reciboContainer = document.querySelector(
+      `.${style.recibo_container}`
+    );
+
+    const filtroProduto = document.querySelector(`.${style.buscaProduto}`);
+    const filtroCliente = document.querySelector(`.${style.buscaCliente}`);
+    const campoData = document.querySelector(
+      `.${style.campoData} input[type="date"]`
+    );
+
+    const dataOriginal = campoData.value;
+    const [ano, mes, dia] = dataOriginal.split("-");
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+
+    const spanData = document.createElement("span");
+    spanData.textContent = dataFormatada;
+    spanData.style.fontSize = "14px";
+    spanData.style.padding = "5px";
+    spanData.style.border = "1px solid #ccc";
+    spanData.style.borderRadius = "4px";
+    spanData.style.backgroundColor = "#ffffff";
+    spanData.style.display = "inline-block";
+
+    campoData.replaceWith(spanData);
+
+    if (filtroProduto) filtroProduto.classList.add(style.ocultoParaPDF);
+    if (filtroCliente) filtroCliente.classList.add(style.ocultoParaPDF);
+
+    const opcoes = {
+      scale: 6,
+      useCORS: true,
+      logging: true,
+      allowTaint: true,
+    };
+
+    html2canvas(reciboContainer, opcoes).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png", 6.0);
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("recibo.pdf");
+
+      if (filtroProduto) filtroProduto.classList.remove(style.ocultoParaPDF);
+      if (filtroCliente) filtroCliente.classList.remove(style.ocultoParaPDF);
+
+      spanData.replaceWith(campoData);
+      campoData.value = dataOriginal;
+    });
   };
 
   return (
@@ -151,17 +240,25 @@ export function Recibos() {
       <Topbar>
         <div className={style.pagina_conteudo}>
           <div className={style.recibo_container}>
-            {/* Logo no canto superior esquerdo */}
             <img src={microservice} alt="Logo" className={style.logo} />
 
-            {/* Botão "Alterar Cliente" no topo */}
-            {clienteSelecionado && (
-              <button onClick={reabrirFiltro} className={style.botao_alterar}>
-                Alterar Cliente
-              </button>
-            )}
+            <div className={style.camposSuperiores}>
+              <div className={style.campoPedido}>
+                <label>N° Pedido:</label>
+                <input type="text" value={`PED${Date.now()}`} readOnly />
+              </div>
+              <div className={style.campoData}>
+                <label>Data:</label>
+                <input
+                  type="date"
+                  value={data.split("-").reverse().join("-")}
+                  onChange={(e) =>
+                    setData(e.target.value.split("-").reverse().join("-"))
+                  }
+                />
+              </div>
+            </div>
 
-            {/* Filtro de cliente */}
             {mostrarFiltro && (
               <div className={style.filtros}>
                 <div className={style.buscaCliente}>
@@ -187,7 +284,6 @@ export function Recibos() {
               </div>
             )}
 
-            {/* Dados do cliente selecionado */}
             {clienteSelecionado && (
               <div className={style.dados_cliente}>
                 <div className={style.coluna}>
@@ -233,7 +329,6 @@ export function Recibos() {
               </div>
             )}
 
-            {/* Filtro de produtos */}
             {clienteSelecionado && (
               <div className={style.filtros}>
                 <div className={style.buscaProduto}>
@@ -250,8 +345,7 @@ export function Recibos() {
                           key={produto.id}
                           onClick={() => handleSelecionarProduto(produto)}
                         >
-                          {produto.nome} - {produto.modelo}{" "}
-                          {/* Exibe descrição e modelo */}
+                          {produto.nome} - {produto.modelo}
                         </li>
                       ))}
                     </ul>
@@ -260,7 +354,6 @@ export function Recibos() {
               </div>
             )}
 
-            {/* Tabela de produtos */}
             <table className={style.tabela_produtos}>
               <thead>
                 <tr>
@@ -332,15 +425,25 @@ export function Recibos() {
               </tbody>
             </table>
 
-            {/* Botão Cancelar */}
-            <button onClick={cancelarRecibo} className={style.botaoCancelar}>
-              Cancelar
-            </button>
-
-            {/* Total */}
             <div className={style.total}>
               <strong>Total: R${total.toFixed(2)}</strong>
             </div>
+          </div>
+
+          <div className={style.botoes}>
+            <button onClick={salvarRecibo} className={style.botaoSalvar}>
+              Salvar
+            </button>
+            <button onClick={cancelarRecibo} className={style.botaoCancelar}>
+              Cancelar
+            </button>
+            <button
+              onClick={gerarPDF}
+              className={style.botaoPDF}
+              disabled={!reciboSalvo} // Desabilita o botão se o recibo não foi salvo
+            >
+              Gerar PDF
+            </button>
           </div>
         </div>
       </Topbar>

@@ -10,7 +10,7 @@
     position: relative;
     padding: 80px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 0px;
     background-color: white;
     max-width: 900px;
     margin: 0 auto;
@@ -22,26 +22,8 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 150px; /* Ajuste o tamanho conforme necessário */
+    width: 200px; /* Ajuste o tamanho conforme necessário */
     height: auto;
-  }
-  
-  /* Botão "Alterar Cliente" no topo */
-  .botao_alterar {
-    position: absolute;
-    top: 60px;
-    right: 80px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .botao_alterar:hover {
-    background-color: #45a049;
   }
   
   /* Filtros */
@@ -52,6 +34,7 @@
   
   .buscaCliente {
     position: relative;
+    top:-50px;
   }
   
   .buscaCliente input {
@@ -93,13 +76,13 @@
   
   /* Dados do cliente */
   .dados_cliente {
-    margin-top: 30px;
+    margin-top: 50px;
   }
   
   .campo_cliente {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
   }
   
   .rotulo {
@@ -112,8 +95,8 @@
     flex-grow: 1;
     padding: 3px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
+    border-radius: 0px;
+    background-color: #ffffff;
   }
   /* Filtro de produtos */
   .buscaProduto {
@@ -163,7 +146,7 @@
   .tabela_produtos {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: -40px;
   }
   
   .tabela_produtos th,
@@ -174,11 +157,11 @@
   }
   
   .tabela_produtos th {
-    background-color: #f0f0f0;
+    background-color: #d4cece;
   }
   
   .tabela_produtos tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
   }
   
   .tabela_produtos td input {
@@ -199,29 +182,10 @@
   .tabela_produtos td:nth-child(4) input { /* Quantidade */
     width: 80px; /* Largura menor para quantidade */
   }
-  
-  
-  
-  
-  /* Botão para adicionar produto */
-  .botaoAdicionar {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .botaoAdicionar:hover {
-    background-color: #45a049;
-  }
-  
   /* Total */
   .total {
     text-align: right;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 18px;
     font-weight: bold;
   }
@@ -233,18 +197,6 @@
     gap: 10px;
     margin-top: 0;
   }
-  
-  .campo-data,
-  .campo-pedido {
-    display: flex;
-    align-items: center;
-  }
-  
-  .campo-data label,
-  .campo-pedido label {
-    margin-right: 5px;
-  }
-  
   .imagem-recibo {
     max-width: 200px;
     height: auto;
@@ -268,34 +220,110 @@
     font-size: 14px; /* Ajuste o tamanho da fonte dentro do campo, se necessário */
     border-radius: 40px;
   }
-  
-  .campo-vendedor {
-    display: flex;
-    align-items: center;
-  }
-  
-  .campo-vendedor label {
-    margin-right: 5px;
-  }
-  
-  .campo-vendedor input {
-    padding: 1px;
-    font-size: 14px;
-    width: 100px; /* Ajuste o tamanho conforme necessário */
-    border: 1px solid #ccc;
-    border-radius: 40px;
-  }
   /* Botão Cancelar */
-.botaoCancelar {
-  padding: 10px 15px;
-  background-color: #ff4d4d; /* Vermelho */
-  color: white;
+  .botaoCancelar {
+    background-color: #ff4d4d; /* Vermelho */
+    color: white;
+  }
+  
+  .botaoCancelar:hover {
+    background-color: #cc0000; /* Vermelho mais escuro ao passar o mouse */
+    transform: scale(1.05);
+  }
+/* Botão Salvar */
+.botaoSalvar,
+.botaoCancelar,
+.botaoPDF {
+  padding: 10px 15px; /* Padding consistente */
+  width: 120px; /* Largura fixa */
+  height: 40px; /* Altura fixa */
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 20px;
+  font-size: 14px; /* Tamanho da fonte consistente */
+  text-align: center; /* Centraliza o texto */
+  margin-top: 14px; /* Espaçamento superior */
+  margin-left: 10px; /* Espaçamento entre os botões */
+  transition: background-color 0.3s, transform 0.3s; /* Transição suave */
 }
 
-.botaoCancelar:hover {
-  background-color: #cc0000; /* Vermelho mais escuro ao passar o mouse */
+/* Botão Salvar */
+.botaoSalvar {
+  background-color: #2196f3; /* Azul */
+  color: white;
+}
+
+.botaoSalvar:hover {
+  background-color: #1976d2; /* Azul mais escuro ao passar o mouse */
+  transform: scale(1.05); /* Aumenta levemente o botão */
+}
+
+/* Contêiner para os campos superiores (Número do Pedido e Data) */
+.camposSuperiores {
+  display: flex;
+  justify-content: space-between; /* Alinha um item à esquerda e o outro à direita */
+  align-items: center; /* Centraliza verticalmente */
+  margin-bottom: 20px; /* Espaçamento abaixo dos campos */
+}
+
+/* Estilo para o campo de Número do Pedido */
+.campoPedido {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaçamento entre o label e o input */
+  margin-left: auto; /* Move o campo para a direita */
+  margin-right: 20px; /* Aproxima o campo da Data */
+}
+
+/* Estilo para o campo de Data */
+.campoData {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaçamento entre o label e o input */
+}
+
+/* Estilo para os labels */
+.campoPedido label,
+.campoData label {
+  font-weight: bold;
+}
+
+/* Estilo para os inputs */
+.campoPedido input,
+.campoData input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ffffff; /* Fundo cinza claro */
+}
+
+/* Se os inputs forem somente leitura */
+.campoPedido input[readonly],
+.campoData input[readonly] {
+  background-color: #ffffff; /* Fundo cinza mais escuro */
+  cursor: not-allowed; /* Cursor de "não permitido" */
+}
+/* Contêiner para os botões */
+.botoes {
+  display: flex;
+  justify-content: center; /* Centraliza os botões */
+  gap: 10px; /* Espaçamento entre os botões */
+  margin-top: 20px; /* Espaçamento acima dos botões */
+}
+
+/* Botão Gerar PDF */
+.botaoPDF {
+  background-color: #ffcc00; /* Amarelo */
+  color: black;
+}
+
+.botaoPDF:hover {
+  background-color: #e6b800; /* Amarelo mais escuro ao passar o mouse */
+  transform: scale(1.05);
+}
+
+/* Classe para ocultar elementos */
+.ocultoParaPDF {
+  display: none !important;
 }
