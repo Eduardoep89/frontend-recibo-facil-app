@@ -26,6 +26,11 @@
     width: 70%; /* Tamanho padrão da logo */
     height: auto;
 }
+/* Classe para o item ativo */
+.sidebar_item.ativo {
+    color: #12af2c; /* Verde */
+    transform: scale(1.1); /* Aumenta levemente o tamanho */
+}
 
 /* Responsividade para tablets */
 @media screen and (max-width: 768px) {

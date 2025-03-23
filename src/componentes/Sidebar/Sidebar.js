@@ -1,3 +1,4 @@
+import React from "react";
 import style from "./Sidebar.module.css";
 import { MdGroup } from "react-icons/md";
 import Logo from "../../assets/microservice.png";

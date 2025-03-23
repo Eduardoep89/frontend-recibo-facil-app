@@ -1,45 +1,33 @@
-/* Sidebar Item */
 .sidebar_item {
     text-decoration: none;
     display: flex;
-    align-items: center; /* Garante alinhamento vertical */
+    align-items: center;
     margin: 20px;
     color: #939393;
-    transition: color 0.3s; /* Transição suave para hover */
+    transition: color 0.3s;
 }
 
-.sidebar_conteudo {
-    position: fixed;
-    top: 10vh; /* Para ficar abaixo da Topbar */
-    left: 0;
-    width: 20%; /* Ou outro valor adequado */
-    height: calc(100vh - 10vh); /* Ajusta a altura para não invadir a Topbar */
-    background-color: #333;
-    z-index: 999; /* Para garantir que fique abaixo da Topbar */
-}
-
-
-/* Ícones da Sidebar */
 .sidebar_item svg {
     width: 50px;
     height: 44px;
 }
 
-/* Texto do Link */
 .sidebar_item .texto_link {
     margin: 10px;
     font-size: 20px;
-    white-space: nowrap; /* Evita quebra de linha no texto */
+    white-space: nowrap;
 }
 
-/* Efeito de Hover */
 .sidebar_item:hover {
     transform: scale(1.1);
     color: #12af2c;
     transition: transform 0.3s ease;
 }
 
-/* Responsividade */
+.sidebar_item.ativo {
+    color: #12af2c !important;
+}
+
 @media (max-width: 768px) {
     .sidebar_item {
         margin: 15px;
@@ -59,8 +47,8 @@
 @media (max-width: 480px) {
     .sidebar_item {
         margin: 10px;
-        flex-direction: column; /* Ícone em cima do texto */
-        align-items: center; /* Centraliza o conteúdo */
+        flex-direction: column;
+        align-items: center;
     }
 
     .sidebar_item svg {
