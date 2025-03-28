@@ -220,7 +220,7 @@ export function Produtos() {
                       <td>{produto.nome}</td>
                       <td>{produto.marca}</td>
                       <td>{produto.modelo}</td>
-                      <td>R$ {produto.preco.toFixed(2)}</td>
+                      <td>R$ {(produto.preco || 0).toFixed(2)}</td>
                       <td>
                         <div className={style.botoes_tabela}>
                           <Link

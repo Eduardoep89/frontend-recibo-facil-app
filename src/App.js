@@ -8,6 +8,7 @@ import { EditarCliente } from "./paginas/EditarCliente/EditarCliente";
 import { NovoCliente } from "./paginas/NovoCliente/NovoCliente";
 import { EditarProduto } from "./paginas/EditarProduto/EditarProduto";
 import { NovoProduto } from "./paginas/NovoProduto/NovoProduto";
+import { Relatorios } from "./paginas/Relatorios/RelatorioIA";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/cliente/novo" element={<NovoCliente />} />
         <Route path="/produto/editar" element={<EditarProduto />} />
         <Route path="/produto/novo" element={<NovoProduto />} />
+        <Route path="relatorios" element={<Relatorios />} />
       </Routes>
     </BrowserRouter>
   );
