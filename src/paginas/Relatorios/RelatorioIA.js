@@ -5,13 +5,17 @@ import style from "./RelatorioIA.module.css";
 import Table from "react-bootstrap/esm/Table";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { FaFilter, FaChartLine, FaLightbulb } from "react-icons/fa";
+import { FaFilter, FaChartLine, FaLightbulb, FaChartPie } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import ClienteApi from "../../services/clienteAPI";
 import ProdutoApi from "../../services/produtoAPI";
 import ReciboApi from "../../services/reciboAPI";
 import ItemReciboApi from "../../services/itemReciboAPI";
 import iaAPI from "../../services/iaAPI";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function Relatorios() {
   const [relatorio, setRelatorio] = useState(null);
@@ -24,8 +28,41 @@ export function Relatorios() {
   const [mostrarModalSugestoes, setMostrarModalSugestoes] = useState(false);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [sugestoes, setSugestoes] = useState(null);
+  const [mostrarGraficoClientes, setMostrarGraficoClientes] = useState(false);
+  const [mostrarGraficoProdutos, setMostrarGraficoProdutos] = useState(false);
 
-  // Carrega dados iniciais
+  const getClientesChartData = () => {
+    if (!relatorio?.topClientes) return null;
+
+    return {
+      labels: relatorio.topClientes.map((c) => c.nome),
+      datasets: [
+        {
+          data: relatorio.topClientes.map((c) => c.totalGasto),
+          backgroundColor: ["#FFD700", "#3498DB", "#FF5733"],
+          borderColor: "#fff",
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
+
+  const getProdutosChartData = () => {
+    if (!relatorio?.topProdutos) return null;
+
+    return {
+      labels: relatorio.topProdutos.map((p) => p.nome),
+      datasets: [
+        {
+          data: relatorio.topProdutos.map((p) => p.totalVendido),
+          backgroundColor: ["#FFD700", "#3498DB", "#FF5733"],
+          borderColor: "#fff",
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
+
   useEffect(() => {
     const carregarDadosIniciais = async () => {
       try {
@@ -91,12 +128,11 @@ export function Relatorios() {
   };
 
   const gerarRelatorioAnalitico = async () => {
-    // Calcula métricas básicas
     const totalClientes = clientes.length;
     const totalRecibos = recibos.length;
     const totalVendasMes = calcularVendasMes();
     const topClientes = identificarTopClientes();
-    const topProdutos = await identificarTopProdutos(); // Agora é async
+    const topProdutos = await identificarTopProdutos();
 
     return {
       totalClientes,
@@ -119,7 +155,7 @@ export function Relatorios() {
       .reduce((total, recibo) => total + (recibo.total || 0), 0);
   };
 
-  const identificarTopClientes = (limite = 5) => {
+  const identificarTopClientes = (limite = 3) => {
     const clientesComGasto = clientes.map((cliente) => {
       const recibosCliente = recibos.filter((r) => r.clienteId === cliente.id);
       const totalGasto = recibosCliente.reduce(
@@ -134,9 +170,8 @@ export function Relatorios() {
       .slice(0, limite);
   };
 
-  const identificarTopProdutos = async (limite = 5) => {
+  const identificarTopProdutos = async (limite = 3) => {
     try {
-      // Primeiro obtemos todos os itens de todos os recibos
       const todosItens = await Promise.all(
         recibos.map(async (recibo) => {
           const itens = await ItemReciboApi.listarPorReciboIdAsync(recibo.id);
@@ -144,7 +179,6 @@ export function Relatorios() {
         })
       ).then((results) => results.flat());
 
-      // Agora calculamos as vendas por produto
       const produtosComVendas = produtos.map((produto) => {
         const itensDoProduto = todosItens.filter(
           (item) => item.produtoId === produto.id
@@ -165,14 +199,12 @@ export function Relatorios() {
     }
   };
 
-  // ... (restante do código permanece igual)
-
   const gerarInsights = (topClientes, topProdutos) => {
     const insights = [];
 
     if (topClientes.length > 0) {
       insights.push(
-        `Cliente top: ${
+        `Cliente que mais comprou: ${
           topClientes[0].nome
         } gastou R$ ${topClientes[0].totalGasto.toFixed(2)}`
       );
@@ -180,7 +212,7 @@ export function Relatorios() {
 
     if (topProdutos.length > 0) {
       insights.push(
-        `Produto top: ${topProdutos[0].nome} (${topProdutos[0].totalVendido} unidades vendidas)`
+        `Produto/Serviço mais Vendido: ${topProdutos[0].nome} (${topProdutos[0].totalVendido} unidades vendidas)`
       );
     }
 
@@ -188,7 +220,7 @@ export function Relatorios() {
       recibos.length > 0
         ? recibos.reduce((sum, r) => sum + r.total, 0) / recibos.length
         : 0;
-    insights.push(`Ticket médio: R$ ${mediaVenda.toFixed(2)}`);
+    insights.push(`Média de gasto por recibo : R$ ${mediaVenda.toFixed(2)}`);
 
     return insights;
   };
@@ -207,24 +239,18 @@ export function Relatorios() {
       const cliente = clientes.find((c) => c.id === clienteId);
       if (!cliente) throw new Error("Cliente não encontrado");
 
-      // 1. Obter produtos já comprados pelo cliente
       const produtosCliente = await ProdutoApi.listarProdutosPorClienteAsync(
         clienteId
       );
 
-      // 2. Montar o prompt
-      const prompt = `Sugira 3 produtos para ${cliente.nome}...`; // Seu prompt completo
-
-      // 3. Chamar API (usando a Opção 1)
       const respostaIA = await iaAPI.gerarSugestoesProdutosAsync(
         clienteId,
         produtosCliente
       );
 
-      // 4. Processar resposta
       setSugestoes({
         clienteId,
-        sugestoes: respostaIA.sugestoes, // Ajuste conforme o formato da sua API
+        sugestoes: respostaIA.sugestoes,
         timestamp: new Date().toISOString(),
       });
 
@@ -233,7 +259,6 @@ export function Relatorios() {
       setError("Erro ao gerar sugestões: " + err.message);
       console.error("Erro:", err);
 
-      // Fallback
       setSugestoes({
         clienteId,
         sugestoes: [
@@ -247,6 +272,7 @@ export function Relatorios() {
       setLoading(false);
     }
   };
+
   return (
     <Sidebar>
       <Topbar>
@@ -266,7 +292,6 @@ export function Relatorios() {
             </div>
           </div>
 
-          {/* Filtros */}
           <div className={style.filtros_container}>
             <div className={style.filtro_grupo}>
               <FaFilter className={style.icone_filtro} />
@@ -288,7 +313,6 @@ export function Relatorios() {
             </div>
           </div>
 
-          {/* Resultados do filtro */}
           {filtroCliente && (
             <div className={style.resultados_filtro}>
               <h5>Clientes encontrados:</h5>
@@ -321,7 +345,6 @@ export function Relatorios() {
             </div>
           )}
 
-          {/* Relatório Analítico */}
           <div className={style.relatorio_container}>
             {loading ? (
               <div className={style.carregando}>Carregando relatório...</div>
@@ -355,7 +378,33 @@ export function Relatorios() {
                 </div>
 
                 <div className={style.relatorio_secao}>
-                  <h5>Top 5 Clientes com maior gasto mensal</h5>
+                  <div className={style.secao_cabecalho}>
+                    <h5>Top 3 Clientes com maior gasto mensal</h5>
+                    <button
+                      onClick={() =>
+                        setMostrarGraficoClientes(!mostrarGraficoClientes)
+                      }
+                      className={style.botao_grafico}
+                    >
+                      <FaChartPie />{" "}
+                      {mostrarGraficoClientes
+                        ? "Ocultar Gráfico"
+                        : "Mostrar Gráfico"}
+                    </button>
+                  </div>
+
+                  {mostrarGraficoClientes && (
+                    <div className={style.grafico_pizza}>
+                      <Pie
+                        data={getClientesChartData()}
+                        options={{
+                          responsive: true,
+                          plugins: { legend: { position: "top" } },
+                        }}
+                      />
+                    </div>
+                  )}
+
                   <Table striped bordered hover>
                     <thead>
                       <tr>
@@ -377,7 +426,33 @@ export function Relatorios() {
                 </div>
 
                 <div className={style.relatorio_secao}>
-                  <h5>Top 5 Produtos ou Serviços mais vendidos</h5>
+                  <div className={style.secao_cabecalho}>
+                    <h5>Top Produtos ou Serviços mais vendidos</h5>
+                    <button
+                      onClick={() =>
+                        setMostrarGraficoProdutos(!mostrarGraficoProdutos)
+                      }
+                      className={style.botao_grafico}
+                    >
+                      <FaChartPie />{" "}
+                      {mostrarGraficoProdutos
+                        ? "Ocultar Gráfico"
+                        : "Mostrar Gráfico"}
+                    </button>
+                  </div>
+
+                  {mostrarGraficoProdutos && (
+                    <div className={style.grafico_pizza}>
+                      <Pie
+                        data={getProdutosChartData()}
+                        options={{
+                          responsive: true,
+                          plugins: { legend: { position: "top" } },
+                        }}
+                      />
+                    </div>
+                  )}
+
                   <Table striped bordered hover>
                     <thead>
                       <tr>
@@ -399,7 +474,7 @@ export function Relatorios() {
                 </div>
 
                 <div className={style.relatorio_secao}>
-                  <h5>Insights</h5>
+                  <h5>Destaques</h5>
                   <ul>
                     {relatorio.insights.map((insight, i) => (
                       <li key={i}>{insight}</li>
@@ -409,34 +484,51 @@ export function Relatorios() {
               </>
             ) : null}
           </div>
-
-          {/* Modal de Sugestões */}
           <Modal
             show={mostrarModalSugestoes}
             onHide={() => setMostrarModalSugestoes(false)}
             size="lg"
+            centered
+            className={style.modal_personalizado}
           >
-            <Modal.Header closeButton>
-              <Modal.Title>
-                <FaLightbulb /> Sugestões de IA para {clienteSelecionado?.nome}
+            <Modal.Header className={style.modal_header}>
+              <Modal.Title className={style.modal_title}>
+                <FaLightbulb className={style.icone_titulo_modal} />
+                Sugestões Personalizadas para {clienteSelecionado?.nome}
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={style.modal_body}>
               {sugestoes ? (
                 <div className={style.sugestoes_conteudo}>
                   {sugestoes.sugestoes.split("\n").map((item, i) => (
-                    <p key={i}>{item}</p>
+                    <div key={i} className={style.sugestao_item}>
+                      <div className={style.sugestao_icone}>
+                        {i === 0 && (
+                          <span className={style.icone_destaque}>🌟</span>
+                        )}
+                        {i === 1 && (
+                          <span className={style.icone_destaque}>✨</span>
+                        )}
+                        {i === 2 && (
+                          <span className={style.icone_destaque}>💡</span>
+                        )}
+                      </div>
+                      <p className={style.sugestao_texto}>{item}</p>
+                    </div>
                   ))}
                 </div>
               ) : (
-                <div>Carregando sugestões...</div>
+                <div className={style.carregando_sugestoes}>
+                  <div className={style.spinner}></div>
+                  <p>Gerando sugestões personalizadas...</p>
+                </div>
               )}
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className={style.modal_footer}>
               <Button
-                variant="secondary"
+                variant="danger"
                 onClick={() => setMostrarModalSugestoes(false)}
-                className={style.botaoFechar}
+                className={style.botao_fechar}
               >
                 Fechar
               </Button>
