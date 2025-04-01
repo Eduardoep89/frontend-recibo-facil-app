@@ -1,7 +1,6 @@
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import { Link } from "react-router-dom";
-import { MdDelete, MdEdit } from "react-icons/md";
 import { useState, useEffect } from "react";
 import style from "./Produto.module.css";
 import Table from "react-bootstrap/esm/Table";
@@ -9,6 +8,8 @@ import ProdutoApi from "../../services/produtoAPI";
 import ClienteApi from "../../services/clienteAPI";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { RiEdit2Fill } from "react-icons/ri";
+import { MdDeleteForever } from "react-icons/md";
 
 export function Produtos() {
   const [produtos, setProdutos] = useState([]);
@@ -228,14 +229,14 @@ export function Produtos() {
                             state={produto.id}
                             className={style.botao_editar}
                           >
-                            <MdEdit />
+                            <RiEdit2Fill />
                           </Link>
                           <button
                             onClick={() => handleClickDeletar(produto)}
                             className={style.botao_deletar}
                             aria-label={`Deletar produto ${produto.marca} ${produto.modelo}`}
                           >
-                            <MdDelete />
+                            <MdDeleteForever />
                           </button>
                         </div>
                       </td>
