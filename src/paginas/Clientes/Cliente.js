@@ -2,7 +2,7 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import { Link } from "react-router-dom";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import style from "./Cliente.module.css";
 import Table from "react-bootstrap/esm/Table";
 import ClienteApi from "../../services/clienteAPI";
@@ -11,56 +11,20 @@ import Button from "react-bootstrap/Button";
 import { Paginacao } from "../../componentes/Paginacao/Paginacao";
 
 export function Clientes() {
-  const [todosClientes, setTodosClientes] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
-  const [carregando, setCarregando] = useState(false);
+
+  // Estados para paginação
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [itensPorPagina] = useState(10);
+  const [itensPorPagina, setItensPorPagina] = useState(10);
   const [totalRegistros, setTotalRegistros] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [carregando, setCarregando] = useState(false);
 
-  const totalPaginas = Math.ceil(totalRegistros / itensPorPagina);
   const limparFiltro = filtro.length > 0;
-
-  const carregarClientes = useCallback(async () => {
-    try {
-      setCarregando(true);
-      const todosClientesAtivos = await ClienteApi.listarAsync(true);
-      setTodosClientes(todosClientesAtivos);
-      setTotalRegistros(todosClientesAtivos.length);
-    } catch (error) {
-      console.error("Erro ao carregar clientes:", error);
-    } finally {
-      setCarregando(false);
-    }
-  }, []);
-
-  const aplicarPaginacaoEFiltro = useCallback(() => {
-    let clientesFiltrados = todosClientes;
-
-    if (filtro) {
-      clientesFiltrados = todosClientes.filter(
-        (cliente) =>
-          cliente.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-          cliente.cnpjCpf.toLowerCase().includes(filtro.toLowerCase())
-      );
-    }
-
-    const inicio = (paginaAtual - 1) * itensPorPagina;
-    const fim = inicio + itensPorPagina;
-    setClientes(clientesFiltrados.slice(inicio, fim));
-    setTotalRegistros(clientesFiltrados.length);
-  }, [todosClientes, filtro, paginaAtual, itensPorPagina]);
-
-  useEffect(() => {
-    carregarClientes();
-  }, [carregarClientes]);
-
-  useEffect(() => {
-    aplicarPaginacaoEFiltro();
-  }, [aplicarPaginacaoEFiltro]);
 
   const handleClickDeletar = (cliente) => {
     setClienteSelecionado(cliente);
@@ -70,31 +34,80 @@ export function Clientes() {
   const handleDeletar = async () => {
     try {
       await ClienteApi.deletarAsync(clienteSelecionado.id);
-      setTodosClientes((prev) =>
-        prev.filter((c) => c.id !== clienteSelecionado.id)
-      );
-      setTotalRegistros((prev) => prev - 1);
+      // Recarrega os dados após deletar
+      await carregarClientesPaginados();
     } catch (error) {
       console.error("Erro ao deletar cliente", error);
     } finally {
-      setMostrarModal(false);
-      setClienteSelecionado(null);
+      handleFecharModal();
     }
   };
 
-  const handleChangeFiltro = (e) => {
-    setFiltro(e.target.value);
-    setPaginaAtual(1);
+  const handleFecharModal = () => {
+    setMostrarModal(false);
+    setClienteSelecionado(null);
+  };
+
+  const handlePaginaChange = (novaPagina) => {
+    setPaginaAtual(novaPagina);
+  };
+
+  const handleItensPorPaginaChange = (novosItens) => {
+    setItensPorPagina(novosItens);
+    setPaginaAtual(1); // Resetar para a primeira página
+  };
+
+  const carregarClientesPaginados = async () => {
+    setCarregando(true);
+    try {
+      const dadosPaginados = await ClienteApi.listarPaginadoAsync(
+        paginaAtual,
+        itensPorPagina
+      );
+
+      setClientes(dadosPaginados.itens);
+      setClientesFiltrados(dadosPaginados.itens);
+      setTotalRegistros(dadosPaginados.totalRegistros);
+      setTotalPaginas(dadosPaginados.totalPaginas);
+    } catch (error) {
+      console.error("Erro ao carregar clientes paginados:", error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const handleChangeFiltro = async (e) => {
+    const valor = e.target.value;
+    setFiltro(valor);
+
+    if (valor) {
+      try {
+        // Para filtros, buscamos todos os clientes que correspondam
+        const todosClientes = await ClienteApi.listarAsync(true);
+        const filtrados = todosClientes.filter(
+          (cliente) =>
+            cliente.nome.toLowerCase().includes(valor.toLowerCase()) ||
+            cliente.cnpjCpf.toLowerCase().includes(valor.toLowerCase())
+        );
+        setClientesFiltrados(filtrados);
+      } catch (error) {
+        console.error("Erro ao filtrar clientes:", error);
+      }
+    } else {
+      // Se o filtro estiver vazio, volta a exibir os clientes paginados
+      carregarClientesPaginados();
+    }
   };
 
   const handleClearFiltro = () => {
     setFiltro("");
-    setPaginaAtual(1);
+    carregarClientesPaginados();
   };
 
-  const mudarPagina = (novaPagina) => {
-    setPaginaAtual(novaPagina);
-  };
+  // Carrega os clientes quando a página ou itens por página mudam
+  useEffect(() => {
+    carregarClientesPaginados();
+  }, [paginaAtual, itensPorPagina]);
 
   return (
     <Sidebar>
@@ -123,82 +136,79 @@ export function Clientes() {
           </div>
 
           <div className={style.tabela}>
-            {carregando ? (
-              <div className={style.carregando}>Carregando clientes...</div>
-            ) : (
-              <>
-                <Table responsive>
-                  <thead className={style.tabela_cabecalho}>
-                    <tr>
-                      <th>Nome</th>
-                      <th>Endereço</th>
-                      <th>Bairro</th>
-                      <th>Cidade</th>
-                      <th>Telefone</th>
-                      <th>CNPJ/CPF</th>
-                      <th className={style.tabela_acoes}>Ações</th>
+            <Table responsive>
+              <thead className={style.tabela_cabecalho}>
+                <tr>
+                  <th>Nome</th>
+                  <th>Endereço</th>
+                  <th>Bairro</th>
+                  <th>Cidade</th>
+                  <th>Telefone</th>
+                  <th>CNPJ/CPF</th>
+                  <th className={style.tabela_acoes}>Ações</th>
+                </tr>
+              </thead>
+
+              <tbody className={style.tabela_corpo}>
+                {carregando ? (
+                  <tr>
+                    <td colSpan="7" className={style.sem_registros}>
+                      Carregando...
+                    </td>
+                  </tr>
+                ) : clientesFiltrados.length > 0 ? (
+                  clientesFiltrados.map((cliente) => (
+                    <tr key={cliente.id}>
+                      <td>{cliente.nome}</td>
+                      <td>{cliente.endereco}</td>
+                      <td>{cliente.bairro}</td>
+                      <td>{cliente.cidade}</td>
+                      <td>{cliente.telefone}</td>
+                      <td>{cliente.cnpjCpf}</td>
+                      <td>
+                        <div className={style.botoes_tabela}>
+                          <Link
+                            to="/cliente/editar"
+                            state={cliente.id}
+                            className={style.botao_editar}
+                          >
+                            <MdEdit />
+                          </Link>
+                          <button
+                            onClick={() => handleClickDeletar(cliente)}
+                            className={style.botao_deletar}
+                            aria-label={`Deletar cliente ${cliente.nome}`}
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-
-                  <tbody className={style.tabela_corpo}>
-                    {clientes.length > 0 ? (
-                      clientes.map((cliente) => (
-                        <tr key={cliente.id}>
-                          <td>{cliente.nome}</td>
-                          <td>{cliente.endereco}</td>
-                          <td>{cliente.bairro}</td>
-                          <td>{cliente.cidade}</td>
-                          <td>{cliente.telefone}</td>
-                          <td>{cliente.cnpjCpf}</td>
-                          <td>
-                            <div className={style.botoes_tabela}>
-                              <Link
-                                to="/cliente/editar"
-                                state={cliente.id}
-                                className={style.botao_editar}
-                              >
-                                <MdEdit />
-                              </Link>
-                              <button
-                                onClick={() => handleClickDeletar(cliente)}
-                                className={style.botao_deletar}
-                                aria-label={`Deletar cliente ${cliente.nome}`}
-                              >
-                                <MdDelete />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7" className={style.sem_registros}>
-                          Nenhum cliente encontrado.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
-
-                {totalRegistros > 0 && (
-                  <div className={style.paginacao_container}>
-                    <div className={style.contador_registros}>
-                      Mostrando {(paginaAtual - 1) * itensPorPagina + 1} a{" "}
-                      {Math.min(paginaAtual * itensPorPagina, totalRegistros)}{" "}
-                      de {totalRegistros} clientes
-                    </div>
-                    <Paginacao
-                      paginaAtual={paginaAtual}
-                      totalPaginas={totalPaginas}
-                      onMudarPagina={mudarPagina}
-                    />
-                  </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className={style.sem_registros}>
+                      Nenhum cliente encontrado.
+                    </td>
+                  </tr>
                 )}
-              </>
-            )}
+              </tbody>
+            </Table>
           </div>
 
-          <Modal show={mostrarModal} onHide={() => setMostrarModal(false)}>
+          {/* Componente de Paginação - só mostra quando não está filtrando */}
+          {!filtro && (
+            <Paginacao
+              paginaAtual={paginaAtual}
+              totalPaginas={totalPaginas}
+              itensPorPagina={itensPorPagina}
+              totalRegistros={totalRegistros}
+              onPaginaChange={handlePaginaChange}
+              onItensPorPaginaChange={handleItensPorPaginaChange}
+            />
+          )}
+
+          <Modal show={mostrarModal} onHide={handleFecharModal}>
             <Modal.Header closeButton>
               <Modal.Title>Confirmar</Modal.Title>
             </Modal.Header>
@@ -207,10 +217,7 @@ export function Clientes() {
               {clienteSelecionado?.nome}?
             </Modal.Body>
             <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => setMostrarModal(false)}
-              >
+              <Button variant="secondary" onClick={handleFecharModal}>
                 Cancelar
               </Button>
               <Button variant="danger" onClick={handleDeletar}>

@@ -14,6 +14,8 @@ import ItemReciboApi from "../../services/itemReciboAPI";
 import iaAPI from "../../services/iaAPI";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -273,6 +275,86 @@ export function Relatorios() {
     }
   };
 
+  const gerarPDF = async () => {
+    // Seleciona o container principal do relatório
+    const relatorioContainer = document.querySelector(
+      `.${style.relatorio_container}`
+    );
+
+    // Elementos que devem ser ocultos no PDF
+    const botoesAtualizar = document.querySelectorAll(
+      `.${style.botao_atualizar}`
+    );
+    const botoesGrafico = document.querySelectorAll(`.${style.botao_grafico}`);
+    const filtroContainer = document.querySelector(
+      `.${style.filtros_container}`
+    );
+    const resultadosFiltro = document.querySelector(
+      `.${style.resultados_filtro}`
+    );
+    const botoesAcao = document.querySelector(`.${style.botoes_acao}`);
+
+    // Guarda os estados originais dos elementos
+    const elementosOcultos = [
+      ...botoesAtualizar,
+      ...botoesGrafico,
+      filtroContainer,
+      resultadosFiltro,
+      botoesAcao,
+    ].filter((el) => el);
+
+    // Oculta os elementos
+    elementosOcultos.forEach((el) => {
+      el.style.visibility = "hidden";
+      el.style.position = "absolute";
+      el.style.height = "0";
+      el.style.margin = "0";
+      el.style.padding = "0";
+    });
+
+    // Configurações para o html2canvas
+    const opcoes = {
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: relatorioContainer.scrollWidth,
+      windowHeight: relatorioContainer.scrollHeight,
+    };
+
+    try {
+      // Gera o canvas a partir do container
+      const canvas = await html2canvas(relatorioContainer, opcoes);
+
+      // Cria o PDF
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
+
+      // Calcula as dimensões para manter a proporção
+      const imgWidth = 210; // Largura A4 em mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Adiciona a imagem ao PDF
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+      // Salva o PDF
+      pdf.save("relatorio_analitico.pdf");
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+    } finally {
+      // Restaura os elementos ocultos
+      elementosOcultos.forEach((el) => {
+        el.style.visibility = "";
+        el.style.position = "";
+        el.style.height = "";
+        el.style.margin = "";
+        el.style.padding = "";
+      });
+    }
+  };
+
   return (
     <Sidebar>
       <Topbar>
@@ -288,6 +370,13 @@ export function Relatorios() {
                 disabled={loading}
               >
                 <MdRefresh /> Atualizar
+              </button>
+              <button
+                onClick={gerarPDF}
+                className={style.botao_pdf}
+                disabled={loading}
+              >
+                Gerar PDF
               </button>
             </div>
           </div>

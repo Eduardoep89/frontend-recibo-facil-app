@@ -93,15 +93,14 @@ const ClienteApi = {
       throw error;
     }
   },
-  listarPaginado: async (pagina = 1, itensPorPagina = 10, filtro = "") => {
+  async listarPaginadoAsync(pagina = 1, itensPorPagina = 10) {
     try {
-      const params = { pagina, itensPorPagina };
-      if (filtro) params.filtro = filtro;
-
-      const response = await api.get("/api/Cliente/ListarPaginado", { params });
+      const response = await HTTPClient.get(
+        `/api/Cliente/ListarPaginado?pagina=${pagina}&itensPorPagina=${itensPorPagina}`
+      );
       return response.data;
     } catch (error) {
-      console.error("Erro ao listar clientes paginados:", error);
+      console.error("Erro ao listar clientes paginados", error);
       throw error;
     }
   },

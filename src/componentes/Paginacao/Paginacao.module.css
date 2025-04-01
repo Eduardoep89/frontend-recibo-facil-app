@@ -1,62 +1,60 @@
-.container_paginacao {
+.paginacao_container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
     margin-top: 20px;
-    padding: 10px;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
 }
 
-/* Botões de página - Estilo mais claro */
-.botao_pagina {
-    min-width: 40px;
-    background-color: #ffffff;
-    color: #868e96; /* Cinza mais claro para texto */
-    border: 1px solid #ced4da; /* Borda cinza bem clara */
+.paginacao_info {
+    font-size: 14px;
+    color: #666;
+}
+
+.paginacao_controles {
+    display: flex;
+    gap: 5px;
+}
+
+.paginacao_botao {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
     border-radius: 4px;
-    padding: 6px 12px;
-    transition: all 0.3s ease;
-    font-weight: normal;
+    transition: all 0.2s;
 }
 
-/* Página atual - Destaque suave */
-.botao_pagina.pagina_atual {
-    background-color: #e9ecef; /* Fundo cinza claro */
-    color: #495057; /* Texto cinza escuro */
-    border-color: #adb5bd; /* Borda cinza médio */
-    font-weight: bold;
+.paginacao_botao:hover:not(:disabled) {
+    background-color: #f0f0f0;
 }
 
-/* Botões de navegação - Estilo mais suave */
-.botao_navegacao {
-    background-color: #e9ecef; /* Fundo cinza claro */
-    color: #495057; /* Texto cinza escuro */
-    border: 1px solid #ced4da; /* Borda cinza claro */
-    border-radius: 4px;
-    padding: 6px 12px;
-    transition: all 0.3s ease;
-}
-
-/* Efeito hover - Tom levemente mais escuro */
-.botao_pagina:hover:not(.pagina_atual),
-.botao_navegacao:hover:not(.desabilitado) {
-    background-color: #dee2e6; /* Cinza médio-claro */
-    color: #343a40; /* Texto mais escuro */
-    border-color: #adb5bd;
-}
-
-/* Botões desabilitados - Ainda mais claro */
-.botao_navegacao.desabilitado {
-    background-color: #f8f9fa; /* Cinza quase branco */
-    border-color: #f1f3f5;
-    color: #ced4da; /* Texto cinza bem claro */
+.paginacao_botao:disabled {
+    color: #ccc;
     cursor: not-allowed;
-    opacity: 0.7;
 }
 
-/* Pontos de ellipsis - Estilo mais suave */
-.pontos {
-    padding: 0 10px;
-    color: #adb5bd; /* Cinza médio-claro */
-    font-size: 1.1rem;
+.paginacao_botao_ativo {
+    background-color: #1d75b1;
+    color: white;
+    border-color: #1d75b1;
+}
+
+.paginacao_ellipsis {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.paginacao_por_pagina {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.paginacao_select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }

@@ -315,7 +315,7 @@
 /* Botão Gerar PDF */
 .botaoPDF {
   background-color: #ffcc00; /* Amarelo */
-  color: black;
+  color: white;
 }
 
 .botaoPDF:hover {

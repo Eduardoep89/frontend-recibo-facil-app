@@ -241,6 +241,36 @@
     gap: 5px;
     transition: background-color 0.3s;
   }
+  /* Estilo para o botão de PDF */
+.botao_pdf {
+  background-color: #ffcc00;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+.botao_pdf:hover {
+  background-color: #e6b800; 
+  transform: scale(1.05);
+}
+
+.botao_pdf:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Ajuste para os botões de ação */
+.botoes_acao {
+  display: flex;
+  gap: 10px;
+}
   
   .botao_grafico:hover {
     background-color: #12af2c;

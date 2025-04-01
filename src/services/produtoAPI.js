@@ -93,17 +93,6 @@ const ProdutoApi = {
       throw error;
     }
   },
-  async listarPaginadoAsync(pagina = 1, itensPorPagina = 10) {
-    try {
-      const response = await HTTPClient.get("/api/Produto/ListarPaginado", {
-        params: { pagina, itensPorPagina },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Erro ao listar produtos paginados:", error);
-      throw error;
-    }
-  },
 };
 
 export default ProdutoApi;
