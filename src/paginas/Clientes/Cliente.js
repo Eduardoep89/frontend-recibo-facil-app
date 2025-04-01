@@ -2,20 +2,65 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import { Link } from "react-router-dom";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import style from "./Cliente.module.css";
 import Table from "react-bootstrap/esm/Table";
 import ClienteApi from "../../services/clienteAPI";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { Paginacao } from "../../componentes/Paginacao/Paginacao";
 
 export function Clientes() {
-  const [clientes, setClientes] = useState([]); // Armazena os 10 primeiros clientes
-  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Armazena os clientes filtrados
+  const [todosClientes, setTodosClientes] = useState([]);
+  const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [itensPorPagina] = useState(10);
+  const [totalRegistros, setTotalRegistros] = useState(0);
+
+  const totalPaginas = Math.ceil(totalRegistros / itensPorPagina);
   const limparFiltro = filtro.length > 0;
+
+  const carregarClientes = useCallback(async () => {
+    try {
+      setCarregando(true);
+      const todosClientesAtivos = await ClienteApi.listarAsync(true);
+      setTodosClientes(todosClientesAtivos);
+      setTotalRegistros(todosClientesAtivos.length);
+    } catch (error) {
+      console.error("Erro ao carregar clientes:", error);
+    } finally {
+      setCarregando(false);
+    }
+  }, []);
+
+  const aplicarPaginacaoEFiltro = useCallback(() => {
+    let clientesFiltrados = todosClientes;
+
+    if (filtro) {
+      clientesFiltrados = todosClientes.filter(
+        (cliente) =>
+          cliente.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+          cliente.cnpjCpf.toLowerCase().includes(filtro.toLowerCase())
+      );
+    }
+
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    setClientes(clientesFiltrados.slice(inicio, fim));
+    setTotalRegistros(clientesFiltrados.length);
+  }, [todosClientes, filtro, paginaAtual, itensPorPagina]);
+
+  useEffect(() => {
+    carregarClientes();
+  }, [carregarClientes]);
+
+  useEffect(() => {
+    aplicarPaginacaoEFiltro();
+  }, [aplicarPaginacaoEFiltro]);
 
   const handleClickDeletar = (cliente) => {
     setClienteSelecionado(cliente);
@@ -25,86 +70,31 @@ export function Clientes() {
   const handleDeletar = async () => {
     try {
       await ClienteApi.deletarAsync(clienteSelecionado.id);
-      setClientes((prevClientes) =>
-        prevClientes.filter((c) => c.id !== clienteSelecionado.id)
+      setTodosClientes((prev) =>
+        prev.filter((c) => c.id !== clienteSelecionado.id)
       );
-      setClientesFiltrados((prevFiltrados) =>
-        prevFiltrados.filter((c) => c.id !== clienteSelecionado.id)
-      );
+      setTotalRegistros((prev) => prev - 1);
     } catch (error) {
       console.error("Erro ao deletar cliente", error);
     } finally {
-      handleFecharModal();
+      setMostrarModal(false);
+      setClienteSelecionado(null);
     }
   };
 
-  const handleFecharModal = () => {
-    setMostrarModal(false);
-    setClienteSelecionado(null);
-  };
-
-  const handleChangeFiltro = async (e) => {
-    const valor = e.target.value;
-    setFiltro(valor);
-
-    if (valor) {
-      // Se houver filtro, busca todos os clientes que correspondam ao critério
-      try {
-        const clientesFiltrados = await ClienteApi.listarAsync(true); // Busca todos os clientes
-        const filtrados = clientesFiltrados.filter(
-          (cliente) =>
-            cliente.nome.toLowerCase().includes(valor.toLowerCase()) ||
-            cliente.cnpjCpf.toLowerCase().includes(valor.toLowerCase())
-        );
-        setClientesFiltrados(filtrados);
-      } catch (error) {
-        console.error("Erro ao filtrar clientes:", error);
-      }
-    } else {
-      // Se o filtro estiver vazio, volta a exibir os 10 primeiros clientes
-      setClientesFiltrados(clientes);
-    }
+  const handleChangeFiltro = (e) => {
+    setFiltro(e.target.value);
+    setPaginaAtual(1);
   };
 
   const handleClearFiltro = () => {
     setFiltro("");
-    setClientesFiltrados(clientes); // Volta a exibir os 10 primeiros clientes
+    setPaginaAtual(1);
   };
 
-  async function carregarClientes() {
-    try {
-      // Busca os 10 primeiros clientes
-      const listaClientes = await ClienteApi.listarTop10Async(); // Método para listar os 10 primeiros clientes
-      console.log("Clientes retornados:", listaClientes); // Log para depuração
-
-      if (listaClientes && listaClientes.length > 0) {
-        // Filtra apenas os clientes ativos
-        const clientesAtivos = listaClientes.filter(
-          (cliente) => cliente.ativo === true
-        );
-
-        // Atualiza o estado com os clientes ativos
-        setClientes(clientesAtivos);
-        setClientesFiltrados(clientesAtivos); // Exibe os clientes ativos inicialmente
-      } else {
-        console.error("A resposta da API não contém clientes válidos.");
-      }
-    } catch (error) {
-      console.error("Erro ao carregar clientes:", error);
-    }
-  }
-
-  // Usando useEffect para carregar os 10 primeiros clientes ao montar o componente
-  useEffect(() => {
-    carregarClientes();
-  }, []);
-
-  // Verifica se o filtro está vazio para voltar os clientes iniciais
-  useEffect(() => {
-    if (filtro === "") {
-      setClientesFiltrados(clientes); // Restaura a lista de clientes filtrados para os clientes ativos
-    }
-  }, [clientes, filtro]); // Atualiza clientesFiltrados quando 'clientes' ou 'filtro' mudar
+  const mudarPagina = (novaPagina) => {
+    setPaginaAtual(novaPagina);
+  };
 
   return (
     <Sidebar>
@@ -133,61 +123,82 @@ export function Clientes() {
           </div>
 
           <div className={style.tabela}>
-            <Table responsive>
-              <thead className={style.tabela_cabecalho}>
-                <tr>
-                  <th>Nome</th>
-                  <th>Endereço</th>
-                  <th>Bairro</th>
-                  <th>Cidade</th>
-                  <th>Telefone</th>
-                  <th>CNPJ/CPF</th>
-                  <th className={style.tabela_acoes}>Ações</th>
-                </tr>
-              </thead>
-
-              <tbody className={style.tabela_corpo}>
-                {clientesFiltrados.length > 0 ? (
-                  clientesFiltrados.map((cliente) => (
-                    <tr key={cliente.id}>
-                      <td>{cliente.nome}</td>
-                      <td>{cliente.endereco}</td>
-                      <td>{cliente.bairro}</td>
-                      <td>{cliente.cidade}</td>
-                      <td>{cliente.telefone}</td>
-                      <td>{cliente.cnpjCpf}</td>
-                      <td>
-                        <div className={style.botoes_tabela}>
-                          <Link
-                            to="/cliente/editar"
-                            state={cliente.id}
-                            className={style.botao_editar}
-                          >
-                            <MdEdit />
-                          </Link>
-                          <button
-                            onClick={() => handleClickDeletar(cliente)}
-                            className={style.botao_deletar}
-                            aria-label={`Deletar cliente ${cliente.nome}`}
-                          >
-                            <MdDelete />
-                          </button>
-                        </div>
-                      </td>
+            {carregando ? (
+              <div className={style.carregando}>Carregando clientes...</div>
+            ) : (
+              <>
+                <Table responsive>
+                  <thead className={style.tabela_cabecalho}>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Endereço</th>
+                      <th>Bairro</th>
+                      <th>Cidade</th>
+                      <th>Telefone</th>
+                      <th>CNPJ/CPF</th>
+                      <th className={style.tabela_acoes}>Ações</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className={style.sem_registros}>
-                      Nenhum cliente encontrado.
-                    </td>
-                  </tr>
+                  </thead>
+
+                  <tbody className={style.tabela_corpo}>
+                    {clientes.length > 0 ? (
+                      clientes.map((cliente) => (
+                        <tr key={cliente.id}>
+                          <td>{cliente.nome}</td>
+                          <td>{cliente.endereco}</td>
+                          <td>{cliente.bairro}</td>
+                          <td>{cliente.cidade}</td>
+                          <td>{cliente.telefone}</td>
+                          <td>{cliente.cnpjCpf}</td>
+                          <td>
+                            <div className={style.botoes_tabela}>
+                              <Link
+                                to="/cliente/editar"
+                                state={cliente.id}
+                                className={style.botao_editar}
+                              >
+                                <MdEdit />
+                              </Link>
+                              <button
+                                onClick={() => handleClickDeletar(cliente)}
+                                className={style.botao_deletar}
+                                aria-label={`Deletar cliente ${cliente.nome}`}
+                              >
+                                <MdDelete />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7" className={style.sem_registros}>
+                          Nenhum cliente encontrado.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+
+                {totalRegistros > 0 && (
+                  <div className={style.paginacao_container}>
+                    <div className={style.contador_registros}>
+                      Mostrando {(paginaAtual - 1) * itensPorPagina + 1} a{" "}
+                      {Math.min(paginaAtual * itensPorPagina, totalRegistros)}{" "}
+                      de {totalRegistros} clientes
+                    </div>
+                    <Paginacao
+                      paginaAtual={paginaAtual}
+                      totalPaginas={totalPaginas}
+                      onMudarPagina={mudarPagina}
+                    />
+                  </div>
                 )}
-              </tbody>
-            </Table>
+              </>
+            )}
           </div>
 
-          <Modal show={mostrarModal} onHide={handleFecharModal}>
+          <Modal show={mostrarModal} onHide={() => setMostrarModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Confirmar</Modal.Title>
             </Modal.Header>
@@ -196,7 +207,10 @@ export function Clientes() {
               {clienteSelecionado?.nome}?
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleFecharModal}>
+              <Button
+                variant="secondary"
+                onClick={() => setMostrarModal(false)}
+              >
                 Cancelar
               </Button>
               <Button variant="danger" onClick={handleDeletar}>

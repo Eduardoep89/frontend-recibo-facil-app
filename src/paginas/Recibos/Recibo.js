@@ -8,6 +8,7 @@ import ReciboApi from "../../services/reciboAPI";
 import microservice from "../../assets/microservice.png";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Alert from "react-bootstrap/Alert";
 
 export function Recibos() {
   const hoje = new Date();
@@ -25,10 +26,14 @@ export function Recibos() {
 
   const [produtosCliente, setProdutosCliente] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
-  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  const [, setProdutoSelecionado] = useState(null);
   const [buscaProduto, setBuscaProduto] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [total, setTotal] = useState(0);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
 
   // Novo estado para controlar se o recibo foi salvo
   const [reciboSalvo, setReciboSalvo] = useState(false);
@@ -80,6 +85,7 @@ export function Recibos() {
     carregarProdutosCliente(cliente.id);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const reabrirFiltro = () => {
     setMostrarFiltro(true);
     setBuscaCliente("");
@@ -136,9 +142,12 @@ export function Recibos() {
 
   const salvarRecibo = async () => {
     if (!clienteSelecionado || produtos.length === 0) {
-      alert(
+      setAlertVariant("danger");
+      setAlertMessage(
         "Selecione um cliente e adicione pelo menos um produto antes de salvar."
       );
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 1000); // Fecha após 1 segundo
       return;
     }
 
@@ -159,14 +168,22 @@ export function Recibos() {
       };
 
       const reciboSalvo = await ReciboApi.cadastrarAsync(recibo);
-      alert("Recibo salvo com sucesso!");
+      setAlertVariant("success");
+      setAlertMessage("Recibo salvo com sucesso!");
+      setShowAlert(true);
       console.log("Recibo salvo:", reciboSalvo);
-
-      // Define que o recibo foi salvo
       setReciboSalvo(true);
+
+      // Fecha o alerta após 1 segundo
+      setTimeout(() => setShowAlert(false), 1000);
     } catch (error) {
       console.error("Erro ao salvar recibo:", error);
-      alert("Erro ao salvar recibo. Por favor, tente novamente.");
+      setAlertVariant("danger");
+      setAlertMessage("Erro ao salvar recibo. Por favor, tente novamente.");
+      setShowAlert(true);
+
+      // Fecha o alerta de erro após 1 segundo
+      setTimeout(() => setShowAlert(false), 1000);
     }
   };
 
@@ -238,6 +255,17 @@ export function Recibos() {
   return (
     <Sidebar>
       <Topbar>
+        {showAlert && (
+          <div className={style.alertContainer}>
+            <Alert
+              variant={alertVariant}
+              onClose={() => setShowAlert(false)}
+              dismissible
+            >
+              {alertMessage}
+            </Alert>
+          </div>
+        )}
         <div className={style.pagina_conteudo}>
           <div className={style.recibo_container}>
             <img src={microservice} alt="Logo" className={style.logo} />

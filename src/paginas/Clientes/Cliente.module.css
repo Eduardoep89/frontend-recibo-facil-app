@@ -127,6 +127,25 @@
     margin-top: 0.5em; /* Ajuste conforme necessário */
     transform: translateX(-50%); /* Centraliza horizontalmente */
 }
+/* Estilos para paginação */
+.paginacao_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 0;
+  }
+  
+  .contador_registros {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .carregando {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+  }
 
 /* Media Queries para ajustes em diferentes tamanhos de tela */
 @media (max-width: 768px) {

@@ -93,6 +93,18 @@ const ClienteApi = {
       throw error;
     }
   },
+  listarPaginado: async (pagina = 1, itensPorPagina = 10, filtro = "") => {
+    try {
+      const params = { pagina, itensPorPagina };
+      if (filtro) params.filtro = filtro;
+
+      const response = await api.get("/api/Cliente/ListarPaginado", { params });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao listar clientes paginados:", error);
+      throw error;
+    }
+  },
 };
 
 export default ClienteApi;
