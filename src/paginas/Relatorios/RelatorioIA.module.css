@@ -186,7 +186,7 @@
 .botao_atualizar {
     background-color: #2196f3; 
     border: none;
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 8px 15px;
     color: white;
     display: flex;
@@ -198,7 +198,7 @@
 
 .botao_atualizar:hover {
     background-color: #2196f3; 
-    transform: translateY(-2px);
+    transform: scale(1.05);
 }
 
 .botao_atualizar:disabled {
@@ -234,12 +234,15 @@
     color: white;
     border: none;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
     transition: background-color 0.3s;
+  }
+  .botao_grafico:hover {
+    transform: scale(1.05);
   }
   /* Estilo para o botão de PDF */
 .botao_pdf {
@@ -247,17 +250,16 @@
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   margin-left: 10px;
   transition: background-color 0.3s;
 }
 
 .botao_pdf:hover {
-  background-color: #e6b800; 
   transform: scale(1.05);
 }
 
