@@ -1,0 +1,81 @@
+/* src/paginas/Login/Login.module.css */
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Muda de center para flex-start */
+  min-height: 100vh;
+  padding-top: 20vh; /* Adiciona um espaçamento no topo */
+  background-color: #ffffff;
+  
+  
+}
+.loginForm {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  max-width: 350px;
+  min-width: 300px;
+}
+
+.inputGroup {
+  margin-bottom: 0.8rem;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #272727;
+  font-size: 0.9rem;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #000000;
+  font-size: 0.9rem;
+}
+
+.erro {
+  color: #d32f2f;
+  background-color: #fde7e9;
+  padding: 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.8rem;
+  font-size: 0.8rem;
+}
+
+.botaoLogin {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #27ce2c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.botaoLogin:hover {
+  transform: scale(1.02);
+}
+
+.botaoLogin:disabled {
+  background-color: #27ce2c;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 1rem auto;
+  max-width: 180px;
+  height: auto;
+}
+
+.logo:hover {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
