@@ -1,7 +1,6 @@
-import { HTTPClient } from "./client"; // Importe o HTTPClient que você já tem
+import { HTTPClient } from "./client";
 
 const ProdutoApi = {
-  // Cadastrar um novo produto
   async cadastrarAsync(nome, marca, modelo, preco, clienteId) {
     try {
       const produtoCriar = {
@@ -22,7 +21,6 @@ const ProdutoApi = {
     }
   },
 
-  // Atualizar um produto existente
   async atualizarAsync(produto) {
     try {
       const response = await HTTPClient.put("/api/Produto/Atualizar", produto);
@@ -33,7 +31,6 @@ const ProdutoApi = {
     }
   },
 
-  // Obter um produto por ID
   async obterPorIdAsync(produtoId) {
     try {
       const response = await HTTPClient.get(`/api/Produto/Obter/${produtoId}`);
@@ -44,7 +41,6 @@ const ProdutoApi = {
     }
   },
 
-  // Deletar um produto
   async deletarAsync(produtoId) {
     try {
       const response = await HTTPClient.delete(
@@ -57,7 +53,6 @@ const ProdutoApi = {
     }
   },
 
-  // Listar produtos (ativos ou inativos)
   async listarAsync(ativo = true) {
     try {
       const response = await HTTPClient.get(
@@ -70,7 +65,6 @@ const ProdutoApi = {
     }
   },
 
-  // Listar top 10 produtos
   async listarTop10ProdutosAsync() {
     try {
       const response = await HTTPClient.get("/api/Produto/ListarTop10");
@@ -81,7 +75,6 @@ const ProdutoApi = {
     }
   },
 
-  // Listar produtos por cliente
   async listarProdutosPorClienteAsync(clienteId) {
     try {
       const response = await HTTPClient.get(

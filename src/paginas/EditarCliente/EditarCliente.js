@@ -3,10 +3,10 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./EditarCliente.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import ClienteApi from "../../services/clienteAPI"; // Importe o ClienteApi
+import ClienteApi from "../../services/clienteAPI";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/esm/Button";
-import Alert from "react-bootstrap/Alert"; // Importação do Alert
+import Alert from "react-bootstrap/Alert";
 import { MdOutlineSave, MdCancel } from "react-icons/md";
 
 export function EditarCliente() {
@@ -21,10 +21,9 @@ export function EditarCliente() {
   const [cidade, setCidade] = useState("");
   const [telefone, setTelefone] = useState("");
   const [cnpjCpf, setCnpjCpf] = useState("");
-  const [showAlert, setShowAlert] = useState(false); // Estado para controlar o alerta
-  const [alertVariant, setAlertVariant] = useState("success"); // Estado para o tipo de alerta
-  const [alertMessage, setAlertMessage] = useState(""); // Estado para a mensagem do alerta
-
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,22 +39,22 @@ export function EditarCliente() {
           telefone,
           cnpjCpf
         );
-        setAlertVariant("success"); // Alerta de sucesso
+        setAlertVariant("success");
         setAlertMessage("Cliente atualizado com sucesso!");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
         setTimeout(() => {
           navigate("/clientes"); // Redireciona após 1 segundo
         }, 1000);
       } catch (error) {
         console.error("Erro ao atualizar cliente", error);
-        setAlertVariant("danger"); // Alerta de erro
+        setAlertVariant("danger");
         setAlertMessage("Erro ao atualizar cliente. Tente novamente.");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
       }
     } else {
-      setAlertVariant("danger"); // Alerta de erro
+      setAlertVariant("danger");
       setAlertMessage("Por favor, preencha todos os campos corretamente.");
-      setShowAlert(true); // Exibe o alerta
+      setShowAlert(true);
     }
   };
 

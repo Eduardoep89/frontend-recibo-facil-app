@@ -1,7 +1,6 @@
-import { HTTPClient } from "./client"; // Importe o HTTPClient que você já tem
+import { HTTPClient } from "./client";
 
 const ClienteApi = {
-  // Cadastrar um novo cliente
   async cadastrarAsync(nome, endereco, bairro, cidade, telefone, cnpjCpf) {
     try {
       const clienteCriar = {
@@ -23,7 +22,6 @@ const ClienteApi = {
     }
   },
 
-  // Atualizar um cliente existente
   async atualizarAsync(id, nome, endereco, bairro, cidade, telefone, cnpjCpf) {
     try {
       const clienteAtualizar = {
@@ -46,7 +44,6 @@ const ClienteApi = {
     }
   },
 
-  // Obter um cliente por ID
   async obterPorIdAsync(clienteId) {
     try {
       const response = await HTTPClient.get(`/api/Cliente/Obter/${clienteId}`);
@@ -57,7 +54,6 @@ const ClienteApi = {
     }
   },
 
-  // Deletar um cliente
   async deletarAsync(clienteId) {
     try {
       const response = await HTTPClient.delete(
@@ -83,7 +79,7 @@ const ClienteApi = {
     }
   },
 
-  // Listar top 10 clientes
+  // Minha Procedure para Listar os 10 Primeiros
   async listarTop10Async() {
     try {
       const response = await HTTPClient.get("/api/Cliente/ListarTop10");
@@ -93,6 +89,7 @@ const ClienteApi = {
       throw error;
     }
   },
+  // Minha Procedure de Paginação
   async listarPaginadoAsync(pagina = 1, itensPorPagina = 10) {
     try {
       const response = await HTTPClient.get(

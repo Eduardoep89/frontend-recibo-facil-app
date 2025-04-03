@@ -1,10 +1,9 @@
-/* src/paginas/Login/Login.module.css */
 .loginContainer {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 20vh 1rem 1rem; /* Adaptável para mobile */
+  padding: 20vh 1rem 1rem; 
   background-color: #ffffff;
 }
 
@@ -13,10 +12,10 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100%; /* Alterado para flexível */
+  width: 100%; 
   max-width: 450px;
-  min-width: auto; /* Removido valor fixo */
-  margin: 0 auto; /* Centraliza em telas grandes */
+  min-width: auto; 
+  margin: 0 auto; 
 }
 
 .inputGroup {
@@ -77,8 +76,6 @@
     margin-bottom: 1rem;
   }
 }
-
-/* Mantenha todo o resto do seu CSS original abaixo */
 .inputGroup label {
   position: absolute;
   top: 50%;
@@ -134,8 +131,8 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
-  margin: 0.5rem auto 0; /* Top | Horizontal | Bottom */
-  display: block; /* Necessário para margin auto funcionar */
+  margin: 0.5rem auto 0; 
+  display: block; 
 }
 
 .botaoLogin:hover {

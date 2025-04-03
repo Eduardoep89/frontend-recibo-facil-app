@@ -91,7 +91,7 @@ const iaAPI = {
    */
   async gerarSugestoesParaClientesTop() {
     try {
-      // Primeiro obtém os top clientes (você precisará implementar este endpoint)
+      // Primeiro obtém os top clientes
       const topClientes = await HTTPClient.get("/api/clientes/top");
 
       // Gera sugestões para cada cliente

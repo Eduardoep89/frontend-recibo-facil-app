@@ -1,11 +1,11 @@
-/* Estilos gerais da página */
+
 .pagina_conteudo {
     width: 100%;
     height: 100%;
     padding: 50px;
 }
 
-/* Estilos da tabela */
+
 .tabela {
     margin-top: 30px;
 }
@@ -16,7 +16,7 @@
     font-size: 25px;
 }
 
-/* Ações da tabela */
+
 .tabela_acoes {
     display: flex;
     flex-direction: row;
@@ -24,7 +24,7 @@
     margin-right: 20px;
 }
 
-/* Estilos dos botões de ação na tabela */
+
 .botao_editar {
     border: none;
     background: none;
@@ -62,7 +62,7 @@
     gap: 0px;
 }
 
-/* Cabeçalho da página */
+
 .pagina_cabecalho {
     display: flex;
     justify-content: space-between;
@@ -74,7 +74,7 @@
     gap: 10px;
 }
 
-/* Botão "Novo" */
+
 .botao_novo {
     text-decoration: none;
     color: white;
@@ -128,7 +128,6 @@
     color: #da1212;
 }
 
-/* Estilos para o campo de busca de clientes */
 .buscaCliente {
     position: relative;
     display: flex;
@@ -170,7 +169,6 @@
     background-color: #f0f0f0;
 }
 
-/* Mensagem de nenhum registro encontrado */
 .sem_registros {
     text-align: left;
     color: #888;

@@ -19,7 +19,7 @@ export function EditarProduto() {
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [preco, setPreco] = useState("");
-  const [clienteId, setClienteId] = useState(""); // Mantemos o clienteId, mas não permitimos edição
+  const [clienteId, setClienteId] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
@@ -35,9 +35,9 @@ export function EditarProduto() {
           Marca: marca,
           Modelo: modelo,
           Preco: parseFloat(preco),
-          ClienteId: parseInt(clienteId), // Mantemos o clienteId original
+          ClienteId: parseInt(clienteId),
         };
-        console.log("Dados enviados:", produtoAtualizar); // Verifique o payload
+        console.log("Dados enviados:", produtoAtualizar);
 
         await ProdutoApi.atualizarAsync(produtoAtualizar);
         setAlertVariant("success");
@@ -75,7 +75,7 @@ export function EditarProduto() {
         setMarca(produto.marca);
         setModelo(produto.modelo);
         setPreco(produto.preco.toString());
-        setClienteId(produto.clienteId.toString()); // Define o clienteId, mas não exibimos para edição
+        setClienteId(produto.clienteId.toString());
       } catch (error) {
         console.error("Erro ao buscar dados do produto: ", error);
       }
@@ -85,7 +85,7 @@ export function EditarProduto() {
   }, [id]);
 
   const isFormValid = () => {
-    return nome && marca && modelo && preco; // Não precisamos validar o clienteId, pois ele não é editável
+    return nome && marca && modelo && preco; // Não precisa validar o clienteId, pois ele não é editável
   };
 
   return (
@@ -94,7 +94,6 @@ export function EditarProduto() {
         <div className={style.pagina_conteudo}>
           <h3>Editar Produto/Serviço</h3>
           <Form onSubmit={handleSubmit}>
-            {/* Campo Nome */}
             <Form.Group controlId="formNome" className="mb-3">
               <Form.Label>Descrição</Form.Label>
               <Form.Control
@@ -107,7 +106,6 @@ export function EditarProduto() {
               />
             </Form.Group>
 
-            {/* Campo Marca */}
             <Form.Group controlId="formMarca" className="mb-3">
               <Form.Label>Marca</Form.Label>
               <Form.Control
@@ -120,7 +118,6 @@ export function EditarProduto() {
               />
             </Form.Group>
 
-            {/* Campo Modelo */}
             <Form.Group controlId="formModelo" className="mb-3">
               <Form.Label>Modelo</Form.Label>
               <Form.Control
@@ -133,7 +130,6 @@ export function EditarProduto() {
               />
             </Form.Group>
 
-            {/* Campo Preço */}
             <Form.Group controlId="formPreco" className="mb-3">
               <Form.Label>Preço</Form.Label>
               <Form.Control
@@ -146,7 +142,6 @@ export function EditarProduto() {
               />
             </Form.Group>
 
-            {/* Botões Salvar e Cancelar */}
             <Button
               className={style.botao_salvar}
               variant="primary"
@@ -164,7 +159,6 @@ export function EditarProduto() {
             </Button>
           </Form>
 
-          {/* Alerta personalizado */}
           {showAlert && (
             <div className={style.alertContainer}>
               <Alert

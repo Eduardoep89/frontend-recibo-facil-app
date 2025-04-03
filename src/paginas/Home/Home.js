@@ -5,9 +5,9 @@ import style from "./Home.module.css";
 export function Home() {
   return (
     <div className={style.conteudo}>
-      <Sidebar /> {/* Sidebar fixa à esquerda */}
+      <Sidebar />
       <div className={style.pagina_conteudo}>
-        <Topbar /> {/* Topbar fixo no topo */}
+        <Topbar />
         <div className={style.bem_vindo}>Bem-vindo ao Recibo Fácil!</div>
         <div className={style.descricao}>
           Gerencie seus recibos, clientes e produtos de forma simples e rápida.

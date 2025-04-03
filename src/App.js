@@ -47,7 +47,7 @@ function App() {
             }
           />
 
-          {/* Proteja todas as outras rotas da mesma forma */}
+          {/* PROTEÇÃO DE ROTAS */}
           <Route
             path="/produtos"
             element={

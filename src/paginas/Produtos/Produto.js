@@ -15,10 +15,10 @@ export function Produtos() {
   const [produtos, setProdutos] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
   const [filtro, setFiltro] = useState(""); // Filtro por marca e modelo
-  const [clientes, setClientes] = useState([]); // Lista completa de clientes
-  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Clientes filtrados pelo nome
-  const [clienteSelecionado, setClienteSelecionado] = useState(null); // Cliente selecionado
-  const [buscaCliente, setBuscaCliente] = useState(""); // Texto digitado no campo de busca de cliente
+  const [clientes, setClientes] = useState([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [buscaCliente, setBuscaCliente] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const limparFiltro = filtro.length > 0 || clienteSelecionado !== null;
@@ -94,8 +94,8 @@ export function Produtos() {
 
   const handleSelecionarCliente = (cliente) => {
     setClienteSelecionado(cliente);
-    setBuscaCliente(cliente.nome); // Exibe o nome do cliente selecionado no campo de busca
-    setClientesFiltrados([]); // Fecha a lista suspensa
+    setBuscaCliente(cliente.nome);
+    setClientesFiltrados([]);
     filtrarPorCliente(cliente.id);
   };
 
@@ -119,13 +119,13 @@ export function Produtos() {
 
   async function carregarProdutos() {
     try {
-      // Busca os 10 primeiros produtos
-      const listaProdutos = await ProdutoApi.listarTop10ProdutosAsync(); // Método para listar os 10 primeiros produtos
-      console.log("Produtos retornados:", listaProdutos); // Log para depuração
+      // Busca os 10 primeiros produtos é o Procedure que criei no sql
+      const listaProdutos = await ProdutoApi.listarTop10ProdutosAsync();
+      console.log("Produtos retornados:", listaProdutos);
 
       if (listaProdutos && listaProdutos.length > 0) {
-        setProdutos(listaProdutos); // Atualiza o estado com os 10 primeiros produtos
-        setProdutosFiltrados(listaProdutos); // Exibe os 10 primeiros produtos inicialmente
+        setProdutos(listaProdutos);
+        setProdutosFiltrados(listaProdutos);
       } else {
         console.error("A resposta da API não contém produtos válidos.");
       }

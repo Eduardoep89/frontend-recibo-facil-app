@@ -1,7 +1,6 @@
-import { HTTPClient } from "./client"; // Importe o HTTPClient que você já tem
+import { HTTPClient } from "./client";
 
 const ReciboApi = {
-  // Cadastrar um novo recibo
   async cadastrarAsync(recibo) {
     try {
       const response = await HTTPClient.post("/api/Recibo/Cadastrar", recibo);
@@ -12,7 +11,6 @@ const ReciboApi = {
     }
   },
 
-  // Atualizar um recibo existente
   async atualizarAsync(recibo) {
     try {
       const response = await HTTPClient.put("/api/Recibo/Atualizar", recibo);
@@ -23,7 +21,6 @@ const ReciboApi = {
     }
   },
 
-  // Obter um recibo por ID
   async obterPorIdAsync(reciboId) {
     try {
       const response = await HTTPClient.get(`/api/Recibo/Obter/${reciboId}`);
@@ -34,7 +31,6 @@ const ReciboApi = {
     }
   },
 
-  // Deletar um recibo
   async deletarAsync(reciboId) {
     try {
       const response = await HTTPClient.delete(
@@ -47,7 +43,6 @@ const ReciboApi = {
     }
   },
 
-  // Listar todos os recibos (com filtro de ativo/inativo)
   async listarAsync(ativo = true) {
     try {
       const response = await HTTPClient.get(
@@ -60,7 +55,6 @@ const ReciboApi = {
     }
   },
 
-  // Listar os 10 últimos recibos
   async listarTop10Async() {
     try {
       const response = await HTTPClient.get("/api/Recibo/ListarTop10");
@@ -84,7 +78,6 @@ const ReciboApi = {
     }
   },
 
-  // Adicionar um item ao recibo
   async adicionarItemAsync(item) {
     try {
       const response = await HTTPClient.post("/api/ItemRecibo/Adicionar", item);
@@ -95,7 +88,6 @@ const ReciboApi = {
     }
   },
 
-  // Atualizar um item do recibo
   async atualizarItemAsync(item) {
     try {
       const response = await HTTPClient.put("/api/ItemRecibo/Atualizar", item);
@@ -106,7 +98,6 @@ const ReciboApi = {
     }
   },
 
-  // Deletar um item do recibo
   async deletarItemAsync(itemId) {
     try {
       const response = await HTTPClient.delete(

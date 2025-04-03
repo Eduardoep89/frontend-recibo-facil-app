@@ -1,4 +1,3 @@
-/* Estilos do Topbar */
 .topbarr_conteudo {
     background-color:#27ce2c; 
     position: fixed;
@@ -13,7 +12,6 @@
 
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .topbar_conteudo {
         justify-content: center; /* Centraliza o conteúdo em telas menores */
@@ -21,14 +19,14 @@
     }
 
     .botao_deslogar {
-        font-size: 2.5vh; /* Diminui o tamanho da fonte */
-        margin-right: 1rem; /* Reduz o espaçamento lateral */
+        font-size: 2.5vh; 
+        margin-right: 1rem; 
     }
 }
 
 @media (max-width: 480px) {
     .topbar_conteudo {
-        height: 7vh; /* Altura menor para dispositivos móveis */
+        height: 7vh; 
         padding: 0 0.5rem;
     }
 }

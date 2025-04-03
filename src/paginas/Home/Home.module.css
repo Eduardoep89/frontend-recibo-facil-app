@@ -1,4 +1,3 @@
-/* Home.module.css */
 @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -10,13 +9,13 @@
   
   .conteudo {
     display: flex;
-    height: 100vh; /* Garantir que a altura da tela seja ocupada */
+    height: 100vh; 
   }
   
   .pagina_conteudo {
     margin-left: 20%; /* Isso garante que o conteúdo não sobreponha a Sidebar */
     margin-top: 10vh; /* Deixa espaço para o Topbar */
-    width: 80%; /* Define que o conteúdo ocupa o restante da tela */
+    width: 80%; 
     padding: 20px;
     box-sizing: border-box;
   }

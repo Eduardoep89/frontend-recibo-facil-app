@@ -1,11 +1,8 @@
-/* Estilos gerais da página */
 .pagina_conteudo {
     width: 100%;
     height: 100%;
     padding: 50px;
 }
-
-/* Estilos da tabela */
 .tabela {
     margin-top: 30px;
 }
@@ -16,7 +13,6 @@
     font-size: 25px;
 }
 
-/* Ações da tabela */
 .tabela_acoes {
     display: flex;
     flex-direction: row;
@@ -24,45 +20,43 @@
     margin-right: 20px;
 }
 
-/* Estilos dos botões de ação na tabela */
 .botao_editar {
     border: none;
     background: none;
     cursor: pointer;
-    transition: transform 0.3s ease; /* Transição suave para o aumento */
+    transition: transform 0.3s ease; 
 }
 
 .botao_editar svg {
-    color: #1d75b1; /* Ícone azul fora do hover */
+    color: #1d75b1; 
 }
 
 .botao_editar:hover svg {
-    transform: scale(1.1); /* Aumenta levemente o ícone no hover */
+    transform: scale(1.1); 
 }
 
 .botao_deletar {
     border: none;
     background: none;
     cursor: pointer;
-    transition: transform 0.3s ease; /* Transição suave para o aumento */
+    transition: transform 0.3s ease; 
 }
 
 .botao_deletar svg {
-    color: #d81b15; /* Ícone vermelho fora do hover */
+    color: #d81b15; 
 }
 
 .botao_deletar:hover svg {
-    transform: scale(1.1); /* Aumenta levemente o ícone no hover */
+    transform: scale(1.1); 
 }
 
 .botoes_tabela {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    gap: 0px; /* Espaçamento entre os botões */
+    gap: 0px; 
 }
 
-/* Cabeçalho da página */
 .pagina_cabecalho {
     display: flex;
     justify-content: space-between;
@@ -71,10 +65,9 @@
 
 .cabecalho_direito {
     display: flex;
-    gap: 10px; /* Espaçamento entre o seletor e o botão */
+    gap: 10px; 
 }
 
-/* Botão "Novo" */
 .botao_novo {
     text-decoration: none;
     color: white;
@@ -90,15 +83,14 @@
     justify-content: center;
     white-space: nowrap;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Animação suave */
+    transition: background-color 0.3s ease, transform 0.3s ease; 
 }
 
 .botao_novo:hover {
     background-color: #28a745; 
-    transform: scale(1.05); /* Aumenta levemente o botão */
+    transform: scale(1.05); 
 }
 
-/* Input de filtro */
 .input {
     display: flex;
     align-items: center;
@@ -122,10 +114,9 @@
     font-size: small;
     font-weight: bold;
     color: #da1212;
-    /* Usando unidades relativas para margens */
-    margin-left: 20%; /* Ajuste conforme necessário */
-    margin-top: 0.5em; /* Ajuste conforme necessário */
-    transform: translateX(-50%); /* Centraliza horizontalmente */
+    margin-left: 20%; 
+    margin-top: 0.5em; 
+    transform: translateX(-50%); 
 }
 
 /* Media Queries para ajustes em diferentes tamanhos de tela */
@@ -142,8 +133,6 @@
         font-size: 0.8em; /* Reduz ainda mais o tamanho da fonte */
     }
 }
-
-/* Mensagem de nenhum registro encontrado */
 .sem_registros {
     text-align: left;
     color: #888;

@@ -5,13 +5,13 @@
 }
 
 .alertContainer {
-    position: fixed; /* Fixa o alerta na tela */
-    top: 10px; /* Distância do topo */
-    left: 50%; /* Centraliza horizontalmente */
-    transform: translateX(-50%); /* Ajusta o posicionamento */
-    z-index: 1000; /* Garante que o alerta fique acima de outros elementos */
-    width: 100%; /* Largura total */
-    max-width: 300px; /* Largura máxima do alerta */
+    position: fixed;
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 1000; 
+    width: 100%; 
+    max-width: 300px; 
 }
 
 .botao_cancelar,

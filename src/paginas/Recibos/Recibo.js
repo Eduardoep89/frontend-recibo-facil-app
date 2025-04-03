@@ -35,7 +35,7 @@ export function Recibos() {
   const [alertVariant, setAlertVariant] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
 
-  // Novo estado para controlar se o recibo foi salvo
+  //  Estado para controlar se o recibo foi salvo
   const [reciboSalvo, setReciboSalvo] = useState(false);
 
   useEffect(() => {
@@ -147,7 +147,7 @@ export function Recibos() {
         "Selecione um cliente e adicione pelo menos um produto antes de salvar."
       );
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 1000); // Fecha após 1 segundo
+      setTimeout(() => setShowAlert(false), 1000);
       return;
     }
 
@@ -174,7 +174,6 @@ export function Recibos() {
       console.log("Recibo salvo:", reciboSalvo);
       setReciboSalvo(true);
 
-      // Fecha o alerta após 1 segundo
       setTimeout(() => setShowAlert(false), 1000);
     } catch (error) {
       console.error("Erro ao salvar recibo:", error);
@@ -182,7 +181,6 @@ export function Recibos() {
       setAlertMessage("Erro ao salvar recibo. Por favor, tente novamente.");
       setShowAlert(true);
 
-      // Fecha o alerta de erro após 1 segundo
       setTimeout(() => setShowAlert(false), 1000);
     }
   };

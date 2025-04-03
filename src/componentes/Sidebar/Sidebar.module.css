@@ -1,19 +1,18 @@
-/* Sidebar */
 .sidebar_conteudo {
     background: linear-gradient(to bottom, #ffffff 16%, #ffffff 100%);
     position: fixed;
     top: 0;
     left: 0;
-    width: 21%; /* Largura do Sidebar */
-    height: 100vh; /* O Sidebar vai ocupar toda a altura da tela */
+    width: 21%; 
+    height: 100vh; 
     overflow-x: hidden;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-    z-index: 2; /* Sidebar acima do Topbar */
+    z-index: 2; 
 }
 
 .pagina_conteudo {
-    margin-left: 19%; /* Garante que o conteúdo não fique por trás do Sidebar */
-    padding-top: 7vh; /* Compensa a altura do Topbar */
+    margin-left: 19%; 
+    padding-top: 7vh; 
     transition: margin-left 0.3s ease;
 }
 
@@ -23,13 +22,12 @@
 }
 
 .logo {
-    width: 70%; /* Tamanho padrão da logo */
+    width: 70%; 
     height: auto;
 }
-/* Classe para o item ativo */
 .sidebar_item.ativo {
-    color: #12af2c; /* Verde */
-    transform: scale(1.1); /* Aumenta levemente o tamanho */
+    color: #12af2c; 
+    transform: scale(1.1); 
 }
 /* Responsividade para tablets */
 @media screen and (max-width: 768px) {

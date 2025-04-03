@@ -3,10 +3,10 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./NovoCliente.module.css";
 import { useNavigate } from "react-router-dom";
-import ClienteApi from "../../services/clienteAPI"; // Importe o ClienteApi
+import ClienteApi from "../../services/clienteAPI";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert"; // Importação do Alert
+import Alert from "react-bootstrap/Alert";
 import { MdOutlineSave, MdCancel } from "react-icons/md";
 
 export function NovoCliente() {
@@ -16,9 +16,9 @@ export function NovoCliente() {
   const [cidade, setCidade] = useState("");
   const [telefone, setTelefone] = useState("");
   const [cnpjCpf, setCnpjCpf] = useState("");
-  const [showAlert, setShowAlert] = useState(false); // Estado para controlar o alerta
-  const [alertVariant, setAlertVariant] = useState("success"); // Estado para o tipo de alerta
-  const [alertMessage, setAlertMessage] = useState(""); // Estado para a mensagem do alerta
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -27,7 +27,6 @@ export function NovoCliente() {
 
     if (isFormValid()) {
       try {
-        // Cria o cliente
         await ClienteApi.cadastrarAsync(
           nome,
           endereco,
@@ -36,22 +35,22 @@ export function NovoCliente() {
           telefone,
           cnpjCpf
         );
-        setAlertVariant("success"); // Alerta de sucesso
+        setAlertVariant("success");
         setAlertMessage("Cliente criado com sucesso!");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
         setTimeout(() => {
-          navigate("/clientes"); // Redireciona após 1 segundo
+          navigate("/clientes");
         }, 1000);
       } catch (error) {
         console.error("Erro ao criar cliente", error);
-        setAlertVariant("danger"); // Alerta de erro
+        setAlertVariant("danger");
         setAlertMessage("Erro ao criar cliente. Tente novamente.");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
       }
     } else {
-      setAlertVariant("danger"); // Alerta de erro
+      setAlertVariant("danger");
       setAlertMessage("Por favor, preencha todos os campos corretamente.");
-      setShowAlert(true); // Exibe o alerta
+      setShowAlert(true);
     }
   };
 
@@ -158,7 +157,6 @@ export function NovoCliente() {
             </Button>
           </Form>
 
-          {/* Alerta personalizado */}
           {showAlert && (
             <div className={style.alertContainer}>
               <Alert

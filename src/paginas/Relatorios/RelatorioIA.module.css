@@ -1,11 +1,9 @@
-/* Estilos gerais da página */
 .pagina_conteudo {
     width: 100%;
     height: 100%;
     padding: 50px;
 }
 
-/* Cabeçalho da página */
 .pagina_cabecalho {
     display: flex;
     justify-content: space-between;
@@ -15,7 +13,7 @@
 
 .icone_titulo {
     margin-right: 10px;
-    color: #12af2c; /* Alterado */
+    color: #12af2c; 
 }
 
 .botoes_acao {
@@ -23,7 +21,6 @@
     gap: 15px;
 }
 
-/* Filtros */
 .filtros_container {
     margin-bottom: 30px;
     background-color: #f8f9fa;
@@ -55,8 +52,8 @@
 
 .input_filtro:focus {
     outline: none;
-    border-color: #12af2c; /* Alterado */
-    box-shadow: 0 0 0 0.2rem rgba(18, 175, 44, 0.25); /* Alterado */
+    border-color: #12af2c; 
+    box-shadow: 0 0 0 0.2rem rgba(18, 175, 44, 0.25); 
 }
 
 .botao_limpar {
@@ -71,7 +68,6 @@
     transform: scale(1.15);
 }
 
-/* Resultados do filtro */
 .resultados_filtro {
     margin-bottom: 30px;
     background-color: white;
@@ -82,10 +78,9 @@
 
 .resultados_filtro h5 {
     margin-bottom: 15px;
-    color: #12af2c; /* Alterado */
+    color: #12af2c; 
 }
 
-/* Relatório */
 .relatorio_container {
     background-color: white;
     border-radius: 8px;
@@ -104,7 +99,7 @@
 }
 
 .relatorio_cabecalho h4 {
-    color: #12af2c; /* Alterado */
+    color: #12af2c; 
     margin: 0;
 }
 
@@ -156,7 +151,6 @@
     margin-bottom: 10px;
 }
 
-/* Sugestões */
 .botao_sugestoes {
     background-color: #ffc107;
     border: none;
@@ -182,7 +176,7 @@
 .sugestoes_conteudo p {
     margin-bottom: 10px;
 }
-/* Botões */
+
 .botao_atualizar {
     background-color: #2196f3; 
     border: none;
@@ -206,7 +200,6 @@
     cursor: not-allowed;
 }
 
-/* Estados */
 .carregando {
     text-align: center;
     padding: 20px;
@@ -221,7 +214,7 @@
     background-color: #f8d7da;
     border-radius: 5px;
 }
-/* Estilos para os botões e gráficos */
+
 .secao_cabecalho {
     display: flex;
     justify-content: space-between;
@@ -244,7 +237,7 @@
   .botao_grafico:hover {
     transform: scale(1.05);
   }
-  /* Estilo para o botão de PDF */
+
 .botao_pdf {
   background-color: #ffcc00;
   color: white;
@@ -268,7 +261,6 @@
   cursor: not-allowed;
 }
 
-/* Ajuste para os botões de ação */
 .botoes_acao {
   display: flex;
   gap: 10px;
@@ -302,7 +294,7 @@
       height: 250px;
     }
   }
-/* Estilos do Modal Personalizado */
+
 .modal_personalizado {
     border: none;
     border-radius: 12px;
@@ -340,7 +332,6 @@
     background-color: #f8f9fa;
   }
   
-  /* Conteúdo das Sugestões */
   .sugestoes_conteudo {
     display: flex;
     flex-direction: column;
@@ -386,7 +377,6 @@
     line-height: 1.5;
   }
   
-  /* Estilo para carregamento */
   .carregando_sugestoes {
     display: flex;
     flex-direction: column;
@@ -416,7 +406,6 @@
     100% { transform: rotate(360deg); }
   }
   
-  /* Botão Fechar */
   .botao_fechar {
     background-color: #ff4757;
     border: none;
@@ -428,7 +417,7 @@
   }
   
   .botao_fechar:hover {
-    background-color: #cc0000; /* Vermelho mais escuro ao passar o mouse */
+    background-color: #cc0000; 
     transform: scale(1.05);
   }
   

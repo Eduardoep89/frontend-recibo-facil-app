@@ -3,11 +3,11 @@ import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./NovoProduto.module.css";
 import { useNavigate } from "react-router-dom";
-import ProdutoApi from "../../services/produtoAPI"; // Importe o ProdutoApi
-import ClienteApi from "../../services/clienteAPI"; // Importe o ClienteApi para buscar clientes
+import ProdutoApi from "../../services/produtoAPI";
+import ClienteApi from "../../services/clienteAPI";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert"; // Importação do Alert
+import Alert from "react-bootstrap/Alert";
 import { MdOutlineSave, MdCancel } from "react-icons/md";
 
 export function NovoProduto() {
@@ -17,12 +17,11 @@ export function NovoProduto() {
   const [preco, setPreco] = useState("");
   const [clienteId, setClienteId] = useState("");
   const [clientes, setClientes] = useState([]); // Lista completa de clientes
-  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Clientes filtrados pelo nome
-  const [buscaCliente, setBuscaCliente] = useState(""); // Texto digitado no campo de busca de cliente
-  const [showAlert, setShowAlert] = useState(false); // Estado para controlar o alerta
-  const [alertVariant, setAlertVariant] = useState("success"); // Estado para o tipo de alerta
-  const [alertMessage, setAlertMessage] = useState(""); // Estado para a mensagem do alerta
-
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [buscaCliente, setBuscaCliente] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -30,24 +29,24 @@ export function NovoProduto() {
 
     if (isFormValid()) {
       try {
-        // Cria o produto
+        // Cria o produto é o meu cadastrar produto
         await ProdutoApi.cadastrarAsync(nome, marca, modelo, preco, clienteId);
-        setAlertVariant("success"); // Alerta de sucesso
+        setAlertVariant("success");
         setAlertMessage("Produto criado com sucesso!");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
         setTimeout(() => {
-          navigate("/produtos"); // Redireciona após 1 segundo
+          navigate("/produtos");
         }, 1000);
       } catch (error) {
         console.error("Erro ao criar produto", error);
-        setAlertVariant("danger"); // Alerta de erro
+        setAlertVariant("danger");
         setAlertMessage("Erro ao criar produto. Tente novamente.");
-        setShowAlert(true); // Exibe o alerta
+        setShowAlert(true);
       }
     } else {
-      setAlertVariant("danger"); // Alerta de erro
+      setAlertVariant("danger");
       setAlertMessage("Por favor, preencha todos os campos corretamente.");
-      setShowAlert(true); // Exibe o alerta
+      setShowAlert(true);
     }
   };
 
@@ -59,7 +58,6 @@ export function NovoProduto() {
     return nome && marca && modelo && preco && clienteId;
   };
 
-  // Busca a lista de clientes ao carregar o componente
   useEffect(() => {
     const buscarClientes = async () => {
       try {
@@ -73,7 +71,6 @@ export function NovoProduto() {
     buscarClientes();
   }, []);
 
-  // Filtra a lista de clientes conforme o texto digitado
   const handleChangeBuscaCliente = (e) => {
     const valor = e.target.value;
     setBuscaCliente(valor);
@@ -84,7 +81,7 @@ export function NovoProduto() {
       );
       setClientesFiltrados(filtrados);
     } else {
-      setClientesFiltrados([]); // Limpa a lista se o campo estiver vazio
+      setClientesFiltrados([]);
     }
   };
 
@@ -101,7 +98,6 @@ export function NovoProduto() {
         <div className={style.pagina_conteudo}>
           <h3>Novo Produto/Serviço</h3>
           <Form onSubmit={handleSubmit}>
-            {/* Campo Nome */}
             <Form.Group controlId="formNome" className="mb-3">
               <Form.Label>Descrição</Form.Label>
               <Form.Control
@@ -114,7 +110,6 @@ export function NovoProduto() {
               />
             </Form.Group>
 
-            {/* Campo Marca */}
             <Form.Group controlId="formMarca" className="mb-3">
               <Form.Label>Marca</Form.Label>
               <Form.Control
@@ -127,7 +122,6 @@ export function NovoProduto() {
               />
             </Form.Group>
 
-            {/* Campo Modelo */}
             <Form.Group controlId="formModelo" className="mb-3">
               <Form.Label>Modelo</Form.Label>
               <Form.Control
@@ -140,7 +134,6 @@ export function NovoProduto() {
               />
             </Form.Group>
 
-            {/* Campo Preço */}
             <Form.Group controlId="formPreco" className="mb-3">
               <Form.Label>Preço</Form.Label>
               <Form.Control
@@ -179,7 +172,6 @@ export function NovoProduto() {
               </div>
             </Form.Group>
 
-            {/* Botões Salvar e Cancelar */}
             <Button
               className={style.botao_salvar}
               variant="primary"
@@ -197,7 +189,6 @@ export function NovoProduto() {
             </Button>
           </Form>
 
-          {/* Alerta personalizado */}
           {showAlert && (
             <div className={style.alertContainer}>
               <Alert
