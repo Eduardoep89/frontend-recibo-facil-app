@@ -1,0 +1,34 @@
+/* Estilos do Topbar */
+.topbarr_conteudo {
+    background-color:#27ce2c; 
+    position: fixed;
+    top: 0;
+    left: 30;
+    width: 2000px;
+    height: 10vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .topbar_conteudo {
+        justify-content: center; /* Centraliza o conteúdo em telas menores */
+        height: 8vh; /* Reduz a altura para caber melhor */
+    }
+
+    .botao_deslogar {
+        font-size: 2.5vh; /* Diminui o tamanho da fonte */
+        margin-right: 1rem; /* Reduz o espaçamento lateral */
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar_conteudo {
+        height: 7vh; /* Altura menor para dispositivos móveis */
+        padding: 0 0.5rem;
+    }
+}

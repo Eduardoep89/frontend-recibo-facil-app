@@ -2,77 +2,161 @@
 .loginContainer {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Muda de center para flex-start */
+  align-items: flex-start;
   min-height: 100vh;
-  padding-top: 20vh; /* Adiciona um espaçamento no topo */
+  padding: 20vh 1rem 1rem; /* Adaptável para mobile */
   background-color: #ffffff;
-  
-  
 }
+
 .loginForm {
   background: white;
-  padding: 2.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 30%;
-  max-width: 350px;
-  min-width: 300px;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%; /* Alterado para flexível */
+  max-width: 450px;
+  min-width: auto; /* Removido valor fixo */
+  margin: 0 auto; /* Centraliza em telas grandes */
 }
 
 .inputGroup {
-  margin-bottom: 0.8rem;
-}
-
-.inputGroup label {
-  display: block;
-  margin-bottom: 0.4rem;
-  color: #272727;
-  font-size: 0.9rem;
+  position: relative;
+  margin-bottom: 1.5rem;
 }
 
 .inputGroup input {
   width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #000000;
-  font-size: 0.9rem;
+  padding: 0.8rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0px;
+  font-size: 1.2rem;
+  background-color: #f8fafc;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+/* Media Queries para ajustes responsivos */
+@media (max-width: 768px) {
+  .loginContainer {
+    padding-top: 15vh;
+    align-items: center;
+  }
+  
+  .loginForm {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding-top: 10vh;
+  }
+  
+  .loginForm {
+    padding: 1.2rem;
+    border-radius: 8px;
+  }
+  
+  .inputGroup {
+    margin-bottom: 1.2rem;
+  }
+  
+  .inputGroup input {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  .botaoLogin {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+  
+  .logo {
+    max-width: 150px;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Mantenha todo o resto do seu CSS original abaixo */
+.inputGroup label {
+  position: absolute;
+  top: 50%;
+  left: 0.8rem;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.inputGroup input:focus + label,
+.inputGroup input:not(:placeholder-shown) + label {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.inputGroup input:focus {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.inputGroup input:hover {
+  border-color: #3182ce;
+}
+
+.inputGroup input:invalid:not(:placeholder-shown) {
+  border-color: #e53e3e;
+}
+
+.inputGroup input:invalid:not(:placeholder-shown) + label {
+  color: #e53e3e;
 }
 
 .erro {
   color: #d32f2f;
   background-color: #fde7e9;
-  padding: 0.6rem;
-  border-radius: 4px;
-  margin-bottom: 0.8rem;
-  font-size: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  border-left: 4px solid #d32f2f;
 }
 
 .botaoLogin {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.8rem;
   background-color: #27ce2c;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border-radius: 0px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
+  margin: 0.5rem auto 0; /* Top | Horizontal | Bottom */
+  display: block; /* Necessário para margin auto funcionar */
 }
 
 .botaoLogin:hover {
-  transform: scale(1.02);
+  background-color: #167e08;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .botaoLogin:disabled {
-  background-color: #27ce2c;
+  background-color: #a0aec0;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .logo {
   display: block;
-  margin: 0 auto 1rem auto;
+  margin: 0 auto 1.5rem auto;
   max-width: 180px;
   height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .logo:hover {

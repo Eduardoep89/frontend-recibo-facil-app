@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import style from "./Login.module.css";
 import logo from "../../assets/microservice.png";
-import backgroundImage from "../../assets/LoginImpressora.png";
+import { TopBarLogin } from "../../componentes/TopBarLogin/TopBarLogin";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -32,54 +32,48 @@ export function Login() {
   };
 
   return (
-    <div
-      className={style.loginContainer}
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "100%",
-        backgroundPosition: "center 80%",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-        filter: "brightness(0.9) saturate(1.5)",
-      }}
-    >
-      <div className={style.overlay}></div>
+    <TopBarLogin>
+      <div className={style.loginContainer}>
+        <div className={style.overlay}></div>
 
-      <form onSubmit={handleSubmit} className={style.loginForm}>
-        <img src={logo} alt="Logo Microservice" className={style.logo} />
+        <form onSubmit={handleSubmit} className={style.loginForm}>
+          <img src={logo} alt="Logo Microservice" className={style.logo} />
 
-        {erro && <div className={style.erro}>{erro}</div>}
+          {erro && <div className={style.erro}>{erro}</div>}
 
-        <div className={style.inputGroup}>
-          <label htmlFor="email">E-mail</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+          <div className={style.inputGroup}>
+            <input
+              id="email"
+              type="email"
+              placeholder=" "
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <label htmlFor="email">E-mail</label>
+          </div>
 
-        <div className={style.inputGroup}>
-          <label htmlFor="senha">Senha</label>
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-        </div>
+          <div className={style.inputGroup}>
+            <input
+              id="senha"
+              type="password"
+              placeholder=" "
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+            <label htmlFor="senha">Senha</label>
+          </div>
 
-        <button
-          type="submit"
-          className={style.botaoLogin}
-          disabled={carregando}
-        >
-          {carregando ? "Carregando..." : "Entrar"}
-        </button>
-      </form>
-    </div>
+          <button
+            type="submit"
+            className={style.botaoLogin}
+            disabled={carregando}
+          >
+            {carregando ? "Carregando..." : "Acessar"}
+          </button>
+        </form>
+      </div>
+    </TopBarLogin>
   );
 }
