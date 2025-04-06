@@ -10,6 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDeleteForever } from "react-icons/md";
+import { formatarMoeda } from "../../utils/formatters";
 
 export function Produtos() {
   const [produtos, setProdutos] = useState([]);
@@ -221,7 +222,7 @@ export function Produtos() {
                       <td>{produto.nome}</td>
                       <td>{produto.marca}</td>
                       <td>{produto.modelo}</td>
-                      <td>R$ {(produto.preco || 0).toFixed(2)}</td>
+                      <td>{formatarMoeda(produto.preco)}</td>
                       <td>
                         <div className={style.botoes_tabela}>
                           <Link

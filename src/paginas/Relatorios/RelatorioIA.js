@@ -16,6 +16,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { formatarMoeda } from "../../utils/formatters";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -208,7 +209,7 @@ export function Relatorios() {
       insights.push(
         `Cliente que mais comprou: ${
           topClientes[0].nome
-        } gastou R$ ${topClientes[0].totalGasto.toFixed(2)}`
+        }  gastou ${formatarMoeda(topClientes[0].totalGasto)}`
       );
     }
 
@@ -222,7 +223,7 @@ export function Relatorios() {
       recibos.length > 0
         ? recibos.reduce((sum, r) => sum + r.total, 0) / recibos.length
         : 0;
-    insights.push(`Média de gasto por recibo : R$ ${mediaVenda.toFixed(2)}`);
+    insights.push(`Média de gasto por recibo: ${formatarMoeda(mediaVenda)}`);
 
     return insights;
   };
@@ -462,7 +463,7 @@ export function Relatorios() {
 
                   <div className={style.metrica}>
                     <h5>Vendas do Mês</h5>
-                    <p>R$ {relatorio.totalVendasMes.toFixed(2)}</p>
+                    <p>{formatarMoeda(relatorio.totalVendasMes)}</p>
                   </div>
                 </div>
 
@@ -506,7 +507,7 @@ export function Relatorios() {
                       {relatorio.topClientes.map((cliente, i) => (
                         <tr key={i}>
                           <td>{cliente.nome}</td>
-                          <td>R$ {cliente.totalGasto.toFixed(2)}</td>
+                          <td>{formatarMoeda(cliente.totalGasto)}</td>
                           <td>{cliente.qtdRecibos}</td>
                         </tr>
                       ))}

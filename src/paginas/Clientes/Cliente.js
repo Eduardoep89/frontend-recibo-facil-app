@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import { Paginacao } from "../../componentes/Paginacao/Paginacao";
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDeleteForever } from "react-icons/md";
+import { formatarCpfCnpj, formatarTelefone } from "../../utils/formatters";
 
 export function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -164,8 +165,8 @@ export function Clientes() {
                       <td>{cliente.endereco}</td>
                       <td>{cliente.bairro}</td>
                       <td>{cliente.cidade}</td>
-                      <td>{cliente.telefone}</td>
-                      <td>{cliente.cnpjCpf}</td>
+                      <td>{formatarTelefone(cliente.telefone)}</td>
+                      <td>{formatarCpfCnpj(cliente.cnpjCpf)}</td>
                       <td>
                         <div className={style.botoes_tabela}>
                           <Link

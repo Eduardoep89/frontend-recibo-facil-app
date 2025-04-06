@@ -6,7 +6,7 @@ export function Topbar({ children }) {
   return (
     <div>
       <div className={style.topbar_conteudo}>
-        <Link to="/" className={style.botao_deslogar}>
+        <Link to="/login" className={style.botao_deslogar}>
           <MdLogout />
         </Link>
       </div>
