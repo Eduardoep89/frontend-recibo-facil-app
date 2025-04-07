@@ -36,7 +36,7 @@ export function Recibos() {
   const [alertMessage, setAlertMessage] = useState("");
 
   //  Estado para controlar se o recibo foi salvo
-  const [reciboSalvo, setReciboSalvo] = useState(false);
+  const [mostrarBotaoPDF, setMostrarBotaoPDF] = useState(false);
 
   useEffect(() => {
     carregarClientes();
@@ -172,7 +172,7 @@ export function Recibos() {
       setAlertMessage("Recibo salvo com sucesso!");
       setShowAlert(true);
       console.log("Recibo salvo:", reciboSalvo);
-      setReciboSalvo(true);
+      setMostrarBotaoPDF(true);
 
       setTimeout(() => setShowAlert(false), 1000);
     } catch (error) {
@@ -193,7 +193,7 @@ export function Recibos() {
     setBuscaProduto("");
     setProdutosFiltrados([]);
     setMostrarFiltro(true);
-    setReciboSalvo(false); // Reseta o estado de recibo salvo
+    setMostrarBotaoPDF(false);
   };
 
   const gerarPDF = () => {
@@ -226,14 +226,14 @@ export function Recibos() {
     if (filtroCliente) filtroCliente.classList.add(style.ocultoParaPDF);
 
     const opcoes = {
-      scale: 6,
+      scale: 3,
       useCORS: true,
       logging: true,
       allowTaint: true,
     };
 
     html2canvas(reciboContainer, opcoes).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png", 6.0);
+      const imgData = canvas.toDataURL("image/png", 3.0);
       const pdf = new jsPDF("p", "mm", "a4");
 
       const imgWidth = 210;
@@ -463,13 +463,11 @@ export function Recibos() {
             <button onClick={cancelarRecibo} className={style.botaoCancelar}>
               Cancelar
             </button>
-            <button
-              onClick={gerarPDF}
-              className={style.botaoPDF}
-              disabled={!reciboSalvo} // Desabilita o botão se o recibo não foi salvo
-            >
-              Gerar PDF
-            </button>
+            {mostrarBotaoPDF && (
+              <button onClick={gerarPDF} className={style.botaoPDF}>
+                Gerar PDF
+              </button>
+            )}
           </div>
         </div>
       </Topbar>
