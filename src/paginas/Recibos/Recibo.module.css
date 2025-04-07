@@ -328,3 +328,9 @@
   width: 100%;
   max-width: 300px;
 }
+.destaque {
+  background-color: #e6b800; 
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}

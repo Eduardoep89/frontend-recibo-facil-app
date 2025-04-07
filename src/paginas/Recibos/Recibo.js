@@ -9,6 +9,7 @@ import microservice from "../../assets/microservice.png";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Alert from "react-bootstrap/Alert";
+import { FaFilePdf } from "react-icons/fa";
 
 export function Recibos() {
   const hoje = new Date();
@@ -464,8 +465,11 @@ export function Recibos() {
               Cancelar
             </button>
             {mostrarBotaoPDF && (
-              <button onClick={gerarPDF} className={style.botaoPDF}>
-                Gerar PDF
+              <button
+                onClick={gerarPDF}
+                className={`${style.botaoPDF} ${style.destaque}`}
+              >
+                <FaFilePdf /> Gerar PDF
               </button>
             )}
           </div>
