@@ -1,6 +1,7 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./paginas/Login/Login";
+import { Registro } from "./paginas/Registro/Registro"; // Adicione esta importação
 import { Home } from "./paginas/Home/Home";
 import { Clientes } from "./paginas/Clientes/Cliente";
 import { Produtos } from "./paginas/Produtos/Produto";
@@ -15,20 +16,13 @@ import { ProtectedRoute } from "./componentes/ProtectedRoute";
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
-
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-
+          <Route path="/registrar" element={<Registro />} /> {/* Nova rota */}
+          {/* Redirecionamento padrão para home */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
           <Route
             path="/home"
             element={
@@ -37,7 +31,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/clientes"
             element={
@@ -46,8 +39,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* PROTEÇÃO DE ROTAS */}
           <Route
             path="/produtos"
             element={
@@ -56,7 +47,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/recibos"
             element={
@@ -65,7 +55,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/cliente/editar"
             element={
@@ -74,7 +63,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/cliente/novo"
             element={
@@ -83,7 +71,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/produto/editar"
             element={
@@ -92,7 +79,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/produto/novo"
             element={
@@ -101,7 +87,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/relatorios"
             element={
@@ -110,9 +95,11 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Rota de fallback para páginas não encontradas */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -14,13 +14,18 @@
     margin-left: 21%; /* Começa após o Sidebar */
 }
 
-/* Botão de deslogar */
 .botao_deslogar {
+    background: none;
+    border: none;
+    cursor: pointer;
     text-decoration: none;
     color: #ffffff;
     font-size: 3.5vh;
     margin-right: 40px;
     transition: color 0.3s;
+    padding: 0; 
+    display: flex; 
+    align-items: center;
 }
 
 .botao_deslogar:hover {

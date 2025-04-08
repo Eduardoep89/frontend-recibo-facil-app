@@ -1,26 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import style from "./Login.module.css";
+import style from "../Login/Login.module.css";
 import logo from "../../assets/microservice.png";
 import { TopBarLogin } from "../../componentes/TopBarLogin/TopBarLogin";
 
-export function Login() {
+export function Registro() {
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [erro, setErro] = useState("");
-  const { login, loading } = useAuth();
+  const { registrar, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro("");
 
+    if (senha !== confirmarSenha) {
+      setErro("As senhas não coincidem");
+      return;
+    }
+
     try {
-      await login(email, senha);
-      navigate("/"); // redireciona para a home ou dashboard
+      await registrar(nome, email, senha);
+      navigate("/home"); // Adicione esta linha
     } catch (error) {
-      setErro(error.message || "Erro ao fazer login");
+      setErro(error.message || "Erro ao registrar");
     }
   };
 
@@ -32,9 +39,21 @@ export function Login() {
         <form onSubmit={handleSubmit} className={style.loginForm}>
           <img src={logo} alt="Logo Microservice" className={style.logo} />
 
-          <h2 className={style.titulo}>Login</h2>
+          <h2 className={style.titulo}>Criar Conta</h2>
 
           {erro && <div className={style.erro}>{erro}</div>}
+
+          <div className={style.inputGroup}>
+            <input
+              id="nome"
+              type="text"
+              placeholder=" "
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+            <label htmlFor="nome">Nome Completo</label>
+          </div>
 
           <div className={style.inputGroup}>
             <input
@@ -61,19 +80,32 @@ export function Login() {
             <label htmlFor="senha">Senha</label>
           </div>
 
+          <div className={style.inputGroup}>
+            <input
+              id="confirmarSenha"
+              type="password"
+              placeholder=" "
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              required
+              minLength={6}
+            />
+            <label htmlFor="confirmarSenha">Confirmar Senha</label>
+          </div>
+
           <button type="submit" className={style.botaoLogin} disabled={loading}>
-            {loading ? "Carregando..." : "Acessar"}
+            {loading ? "Carregando..." : "Registrar"}
           </button>
 
           <div className={style.rodapeForm}>
             <p>
-              Não tem uma conta?{" "}
+              Já tem uma conta?{" "}
               <button
                 type="button"
                 className={style.botaoLink}
-                onClick={() => navigate("/registrar")}
+                onClick={() => navigate("/login")}
               >
-                Registrar-se
+                Fazer Login
               </button>
             </p>
           </div>
