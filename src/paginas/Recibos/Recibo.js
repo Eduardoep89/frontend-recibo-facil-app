@@ -27,7 +27,7 @@ export function Recibos() {
 
   const [produtosCliente, setProdutosCliente] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
-  const [, setProdutoSelecionado] = useState(null);
+  const [setProdutoSelecionado] = useState(null);
   const [buscaProduto, setBuscaProduto] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [total, setTotal] = useState(0);
