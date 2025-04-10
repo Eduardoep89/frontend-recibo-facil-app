@@ -10,6 +10,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Alert from "react-bootstrap/Alert";
 import { FaFilePdf } from "react-icons/fa";
+import { formatarMoeda } from "../../utils/formatters";
 
 export function Recibos() {
   const hoje = new Date();
@@ -27,7 +28,8 @@ export function Recibos() {
 
   const [produtosCliente, setProdutosCliente] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
-  const [setProdutoSelecionado] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [buscaProduto, setBuscaProduto] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [total, setTotal] = useState(0);
@@ -125,7 +127,14 @@ export function Recibos() {
 
   const atualizarProduto = (index, campo, valor) => {
     const novosProdutos = [...produtos];
-    novosProdutos[index][campo] = valor;
+
+    // Garante que o valor é numérico (caso venha string formatada)
+    const valorNumerico =
+      typeof valor === "string"
+        ? parseFloat(valor.replace(/[^\d,]/g, "").replace(",", ".")) || 0
+        : Number(valor) || 0;
+
+    novosProdutos[index][campo] = valorNumerico;
 
     if (campo === "quantidade" || campo === "preco") {
       novosProdutos[index].subtotal =
@@ -433,18 +442,39 @@ export function Recibos() {
                     </td>
                     <td>
                       <input
-                        type="number"
-                        value={produto.preco}
-                        onChange={(e) =>
-                          atualizarProduto(index, "preco", e.target.value)
+                        type="text"
+                        value={
+                          produto.preco ? formatarMoeda(produto.preco) : ""
                         }
+                        onChange={(e) => {
+                          const valor = e.target.value;
+                          const valorNumerico = valor
+                            ? parseFloat(
+                                valor.replace(/[^\d,]/g, "").replace(",", ".")
+                              ) || 0
+                            : 0;
+                          atualizarProduto(index, "preco", valorNumerico);
+                        }}
+                        onFocus={(e) => {
+                          if (produto.preco) {
+                            e.target.value = produto.preco
+                              .toString()
+                              .replace(".", ",");
+                          }
+                        }}
+                        onBlur={(e) => {
+                          if (produto.preco) {
+                            e.target.value = formatarMoeda(produto.preco);
+                          }
+                        }}
                       />
                     </td>
                     <td>
                       <input
                         type="text"
-                        value={produto.subtotal.toFixed(2)}
+                        value={formatarMoeda(produto.subtotal)}
                         readOnly
+                        className={style.inputFormatado}
                       />
                     </td>
                   </tr>
@@ -453,7 +483,7 @@ export function Recibos() {
             </table>
 
             <div className={style.total}>
-              <strong>Total: R${total.toFixed(2)}</strong>
+              <strong>Total: {formatarMoeda(total)}</strong>
             </div>
           </div>
 
