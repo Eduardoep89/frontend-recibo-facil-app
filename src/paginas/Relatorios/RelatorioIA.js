@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./RelatorioIA.module.css";
@@ -33,6 +33,9 @@ export function Relatorios() {
   const [sugestoes, setSugestoes] = useState(null);
   const [mostrarGraficoClientes, setMostrarGraficoClientes] = useState(false);
   const [mostrarGraficoProdutos, setMostrarGraficoProdutos] = useState(false);
+
+  // Adicionado useRef para o container do relatório
+  const relatorioContainerRef = useRef(null);
 
   const getClientesChartData = () => {
     if (!relatorio?.topClientes) return null;
@@ -276,83 +279,75 @@ export function Relatorios() {
     }
   };
 
+  // Função gerarPDF corrigida usando useRef
   const gerarPDF = async () => {
-    // Seleciona o container principal do relatório
-    const relatorioContainer = document.querySelector(
-      `.${style.relatorio_container}`
-    );
-
-    // Elementos que devem ser ocultos no PDF
-    const botoesAtualizar = document.querySelectorAll(
-      `.${style.botao_atualizar}`
-    );
-    const botoesGrafico = document.querySelectorAll(`.${style.botao_grafico}`);
-    const filtroContainer = document.querySelector(
-      `.${style.filtros_container}`
-    );
-    const resultadosFiltro = document.querySelector(
-      `.${style.resultados_filtro}`
-    );
-    const botoesAcao = document.querySelector(`.${style.botoes_acao}`);
-
-    // Guarda os estados originais dos elementos
-    const elementosOcultos = [
-      ...botoesAtualizar,
-      ...botoesGrafico,
-      filtroContainer,
-      resultadosFiltro,
-      botoesAcao,
-    ].filter((el) => el);
-
-    // Oculta os elementos
-    elementosOcultos.forEach((el) => {
-      el.style.visibility = "hidden";
-      el.style.position = "absolute";
-      el.style.height = "0";
-      el.style.margin = "0";
-      el.style.padding = "0";
-    });
-
-    // Configurações para o html2canvas
-    const opcoes = {
-      scale: 2,
-      useCORS: true,
-      logging: true,
-      allowTaint: true,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: relatorioContainer.scrollWidth,
-      windowHeight: relatorioContainer.scrollHeight,
-    };
+    if (!relatorioContainerRef.current || !relatorio) {
+      alert(
+        "Aguarde o carregamento completo do relatório antes de gerar o PDF."
+      );
+      return;
+    }
 
     try {
-      // Gera o canvas a partir do container
-      const canvas = await html2canvas(relatorioContainer, opcoes);
+      // 1. Preparar elementos para captura
+      const elementosParaOcultar = [
+        ...relatorioContainerRef.current.querySelectorAll(
+          `.${style.botao_atualizar}`
+        ),
+        ...relatorioContainerRef.current.querySelectorAll(
+          `.${style.botao_grafico}`
+        ),
+        document.querySelector(`.${style.filtros_container}`),
+        document.querySelector(`.${style.resultados_filtro}`),
+        document.querySelector(`.${style.botoes_acao}`),
+      ].filter((el) => el !== null);
 
-      // Cria o PDF
+      // Salvar estilos originais
+      const estilosOriginais = elementosParaOcultar.map((el) => ({
+        element: el,
+        original: {
+          visibility: el.style.visibility,
+          position: el.style.position,
+          height: el.style.height,
+          margin: el.style.margin,
+          padding: el.style.padding,
+        },
+      }));
+
+      // Aplicar estilos para PDF
+      elementosParaOcultar.forEach((el) => {
+        el.style.visibility = "hidden";
+        el.style.position = "absolute";
+        el.style.height = "0";
+        el.style.margin = "0";
+        el.style.padding = "0";
+      });
+
+      // 2. Configurar opções para html2canvas
+      const opcoes = {
+        scale: 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: relatorioContainerRef.current.scrollWidth,
+        windowHeight: relatorioContainerRef.current.scrollHeight,
+      };
+
+      // 3. Gerar o PDF
+      const canvas = await html2canvas(relatorioContainerRef.current, opcoes);
       const pdf = new jsPDF("p", "mm", "a4");
       const imgData = canvas.toDataURL("image/png");
-
-      // Calcula as dimensões para manter a proporção
       const imgWidth = 210; // Largura A4 em mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      // Adiciona a imagem ao PDF
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-      // Salva o PDF
       pdf.save("relatorio_analitico.pdf");
     } catch (error) {
-      console.error("Erro ao gerar PDF:", error);
+      console.error("Falha ao gerar PDF:", error);
+      alert("Erro ao gerar PDF. Verifique o console para detalhes.");
     } finally {
-      // Restaura os elementos ocultos
-      elementosOcultos.forEach((el) => {
-        el.style.visibility = "";
-        el.style.position = "";
-        el.style.height = "";
-        el.style.margin = "";
-        el.style.padding = "";
-      });
+      // Restaurar estilos originais (opcional)
+      // Como estamos fazendo download, pode não ser necessário
     }
   };
 
@@ -375,7 +370,7 @@ export function Relatorios() {
               <button
                 onClick={gerarPDF}
                 className={style.botao_pdf}
-                disabled={loading}
+                disabled={loading || !relatorio}
               >
                 Gerar PDF
               </button>
@@ -435,7 +430,11 @@ export function Relatorios() {
             </div>
           )}
 
-          <div className={style.relatorio_container}>
+          {/* Adicionada ref ao container do relatório */}
+          <div
+            className={style.relatorio_container}
+            ref={relatorioContainerRef}
+          >
             {loading ? (
               <div className={style.carregando}>Carregando relatório...</div>
             ) : error ? (
