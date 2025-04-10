@@ -288,22 +288,22 @@ export function Relatorios() {
       return;
     }
 
-    try {
-      // 1. Preparar elementos para captura
-      const elementosParaOcultar = [
-        ...relatorioContainerRef.current.querySelectorAll(
-          `.${style.botao_atualizar}`
-        ),
-        ...relatorioContainerRef.current.querySelectorAll(
-          `.${style.botao_grafico}`
-        ),
-        document.querySelector(`.${style.filtros_container}`),
-        document.querySelector(`.${style.resultados_filtro}`),
-        document.querySelector(`.${style.botoes_acao}`),
-      ].filter((el) => el !== null);
+    // Elementos que devem ser ocultos
+    const elementosParaOcultar = [
+      ...relatorioContainerRef.current.querySelectorAll(
+        `.${style.botao_atualizar}`
+      ),
+      ...relatorioContainerRef.current.querySelectorAll(
+        `.${style.botao_grafico}`
+      ),
+      document.querySelector(`.${style.filtros_container}`),
+      document.querySelector(`.${style.resultados_filtro}`),
+      document.querySelector(`.${style.botoes_acao}`),
+    ].filter((el) => el !== null);
 
-      // Salvar estilos originais
-      const estilosOriginais = elementosParaOcultar.map((el) => ({
+    // Armazenar estilos originais
+    const estilosOriginais = elementosParaOcultar.map((el) => {
+      return {
         element: el,
         original: {
           visibility: el.style.visibility,
@@ -311,19 +311,22 @@ export function Relatorios() {
           height: el.style.height,
           margin: el.style.margin,
           padding: el.style.padding,
+          display: el.style.display, // Adicionado display
         },
-      }));
+      };
+    });
 
-      // Aplicar estilos para PDF
-      elementosParaOcultar.forEach((el) => {
-        el.style.visibility = "hidden";
-        el.style.position = "absolute";
-        el.style.height = "0";
-        el.style.margin = "0";
-        el.style.padding = "0";
-      });
+    // Aplicar estilos de ocultação
+    elementosParaOcultar.forEach((el) => {
+      el.style.visibility = "hidden";
+      el.style.position = "absolute";
+      el.style.height = "0";
+      el.style.margin = "0";
+      el.style.padding = "0";
+      el.style.display = "none"; // Garantir que não ocupem espaço
+    });
 
-      // 2. Configurar opções para html2canvas
+    try {
       const opcoes = {
         scale: 2,
         useCORS: true,
@@ -333,24 +336,29 @@ export function Relatorios() {
         windowHeight: relatorioContainerRef.current.scrollHeight,
       };
 
-      // 3. Gerar o PDF
       const canvas = await html2canvas(relatorioContainerRef.current, opcoes);
       const pdf = new jsPDF("p", "mm", "a4");
       const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 210; // Largura A4 em mm
+      const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save("relatorio_analitico.pdf");
     } catch (error) {
-      console.error("Falha ao gerar PDF:", error);
+      console.error("Erro ao gerar PDF:", error);
       alert("Erro ao gerar PDF. Verifique o console para detalhes.");
     } finally {
-      // Restaurar estilos originais (opcional)
-      // Como estamos fazendo download, pode não ser necessário
+      // Restaurar estilos originais de TODOS os elementos
+      estilosOriginais.forEach(({ element, original }) => {
+        element.style.visibility = original.visibility;
+        element.style.position = original.position;
+        element.style.height = original.height;
+        element.style.margin = original.margin;
+        element.style.padding = original.padding;
+        element.style.display = original.display || ""; // Restaurar display
+      });
     }
   };
-
   return (
     <Sidebar>
       <Topbar>
@@ -589,22 +597,31 @@ export function Relatorios() {
             <Modal.Body className={style.modal_body}>
               {sugestoes ? (
                 <div className={style.sugestoes_conteudo}>
-                  {sugestoes.sugestoes.split("\n").map((item, i) => (
-                    <div key={i} className={style.sugestao_item}>
-                      <div className={style.sugestao_icone}>
-                        {i === 0 && (
-                          <span className={style.icone_destaque}>🌟</span>
-                        )}
-                        {i === 1 && (
-                          <span className={style.icone_destaque}>✨</span>
-                        )}
-                        {i === 2 && (
-                          <span className={style.icone_destaque}>💡</span>
-                        )}
-                      </div>
-                      <p className={style.sugestao_texto}>{item}</p>
-                    </div>
-                  ))}
+                  {sugestoes.sugestoes
+                    .split("\n")
+                    .filter((line) => line.trim() !== "") // Remove linhas vazias
+                    .map((item, i) => {
+                      // Extrai o número e o texto da sugestão
+                      const match = item.match(/^(\d+\.\s*)?(.*)/);
+                      const text = match ? match[2] : item;
+
+                      return (
+                        <div key={i} className={style.sugestao_item}>
+                          <div className={style.sugestao_icone}>
+                            {i === 0 && (
+                              <span className={style.icone_destaque}>🌟</span>
+                            )}
+                            {i === 1 && (
+                              <span className={style.icone_destaque}>✨</span>
+                            )}
+                            {i === 2 && (
+                              <span className={style.icone_destaque}>💡</span>
+                            )}
+                          </div>
+                          <p className={style.sugestao_texto}>{text.trim()}</p>
+                        </div>
+                      );
+                    })}
                 </div>
               ) : (
                 <div className={style.carregando_sugestoes}>
