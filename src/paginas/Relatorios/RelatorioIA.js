@@ -524,7 +524,7 @@ export function Relatorios() {
 
                 <div className={style.relatorio_secao}>
                   <div className={style.secao_cabecalho}>
-                    <h5>Top Produtos ou Serviços mais vendidos</h5>
+                    <h5>Top 3 Produtos ou Serviços mais vendidos</h5>
                     <button
                       onClick={() =>
                         setMostrarGraficoProdutos(!mostrarGraficoProdutos)
