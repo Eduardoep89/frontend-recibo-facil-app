@@ -5,7 +5,16 @@ import style from "./RelatorioIA.module.css";
 import Table from "react-bootstrap/esm/Table";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { FaFilter, FaChartLine, FaLightbulb, FaChartPie } from "react-icons/fa";
+import {
+  FaFilter,
+  FaChartLine,
+  FaLightbulb,
+  FaChartPie,
+  FaStar,
+  FaDollarSign,
+  FaCalendarAlt,
+  FaBoxOpen,
+} from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import ClienteApi from "../../services/clienteAPI";
 import ProdutoApi from "../../services/produtoAPI";
@@ -17,6 +26,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { formatarMoeda } from "../../utils/formatters";
+import { FaTag, FaBarcode } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -185,20 +196,33 @@ export function Relatorios() {
         })
       ).then((results) => results.flat());
 
-      const produtosComVendas = produtos.map((produto) => {
-        const itensDoProduto = todosItens.filter(
-          (item) => item.produtoId === produto.id
-        );
-        const totalVendido = itensDoProduto.reduce(
-          (sum, item) => sum + (item.quantidade || 0),
-          0
-        );
-        return { ...produto, totalVendido };
+      // Objeto para agrupar produtos por nome+marca+modelo
+      const produtosAgrupados = {};
+
+      produtos.forEach((produto) => {
+        const chave = `${produto.nome}_${produto.marca}_${produto.modelo}`;
+        if (!produtosAgrupados[chave]) {
+          produtosAgrupados[chave] = { ...produto, totalVendido: 0 };
+        }
       });
 
-      return produtosComVendas
+      // Soma as quantidades vendidas para cada produto agrupado
+      todosItens.forEach((item) => {
+        const produto = produtos.find((p) => p.id === item.produtoId);
+        if (produto) {
+          const chave = `${produto.nome}_${produto.marca}_${produto.modelo}`;
+          if (produtosAgrupados[chave]) {
+            produtosAgrupados[chave].totalVendido += item.quantidade || 0;
+          }
+        }
+      });
+
+      // Converte o objeto de volta para array e ordena
+      const produtosComVendas = Object.values(produtosAgrupados)
         .sort((a, b) => b.totalVendido - a.totalVendido)
         .slice(0, limite);
+
+      return produtosComVendas;
     } catch (error) {
       console.error("Erro ao identificar top produtos:", error);
       return [];
@@ -207,36 +231,72 @@ export function Relatorios() {
 
   const gerarInsights = (topClientes, topProdutos) => {
     const insights = [];
-
-    if (topClientes.length > 0) {
-      insights.push(
-        `Cliente que mais comprou: ${
-          topClientes[0].nome
-        }  gastou ${formatarMoeda(topClientes[0].totalGasto)}`
-      );
-    }
-
-    if (topProdutos.length > 0) {
-      insights.push(
-        `Produto/Serviço mais Vendido: ${topProdutos[0].nome} (${topProdutos[0].totalVendido} unidades vendidas)`
-      );
-    }
-
     const mediaVenda =
       recibos.length > 0
         ? recibos.reduce((sum, r) => sum + r.total, 0) / recibos.length
         : 0;
-    insights.push(`Média de gasto por recibo: ${formatarMoeda(mediaVenda)}`);
+
+    // Calcula a frequência e formata corretamente
+    const frequenciaDias = calcularFrequenciaMediaCompra();
+    const frequenciaTexto =
+      frequenciaDias === 1 ? "1 dia" : `${frequenciaDias} dias`;
+
+    insights.push({
+      titulo: "Ticket Médio",
+      valor: formatarMoeda(mediaVenda),
+      descricao:
+        mediaVenda > 500
+          ? "Ótimo valor! Continue incentivando compras maiores"
+          : "Você pode aumentar oferecendo combos ou pacotes",
+      icone: <FaDollarSign />,
+    });
+
+    insights.push({
+      titulo: "Frequência de Compra",
+      valor: frequenciaTexto,
+      descricao:
+        frequenciaDias === 1
+          ? "Frequência diária! Programas de fidelidade podem aumentar o ticket médio"
+          : frequenciaDias < 30
+          ? "Excelente fidelidade! Considere um programa de recompensas"
+          : "Oportunidade para criar campanhas de retenção",
+      icone: <FaCalendarAlt />,
+    });
+
+    if (topProdutos.length > 0) {
+      insights.push({
+        titulo: "Produto em Destaque",
+        valor: topProdutos[0].nome,
+        descricao: "O produto mais vendido neste período",
+        icone: <FaBoxOpen />,
+      });
+    }
 
     return insights;
   };
-
   const filtrarClientes = (termo) => {
     const termoBusca = termo?.toLowerCase() || "";
     return clientes.filter((cliente) => {
       const nomeCliente = cliente?.nome?.toLowerCase() || "";
       return nomeCliente.includes(termoBusca);
     });
+  };
+
+  // 2. Depois declare calcularFrequenciaMediaCompra
+  const calcularFrequenciaMediaCompra = () => {
+    if (recibos.length < 2) return "N/A";
+
+    const datasOrdenadas = recibos
+      .map((r) => new Date(r.data))
+      .sort((a, b) => a - b);
+
+    const diferencas = [];
+    for (let i = 1; i < datasOrdenadas.length; i++) {
+      diferencas.push(datasOrdenadas[i] - datasOrdenadas[i - 1]);
+    }
+
+    const mediaMs = diferencas.reduce((a, b) => a + b, 0) / diferencas.length;
+    return Math.round(mediaMs / (1000 * 60 * 60 * 24));
   };
 
   const gerarSugestoesCliente = async (clienteId) => {
@@ -501,21 +561,61 @@ export function Relatorios() {
                       />
                     </div>
                   )}
-
-                  <Table striped bordered hover>
+                  <Table
+                    striped
+                    bordered
+                    hover
+                    className={style.tabela_clientes}
+                  >
                     <thead>
                       <tr>
                         <th>Cliente</th>
-                        <th>Total Gasto</th>
-                        <th>Recibos</th>
+                        <th className={style.coluna_valor}>Total Gasto</th>
+                        <th className={style.coluna_quantidade}>Recibos</th>
                       </tr>
                     </thead>
                     <tbody>
                       {relatorio.topClientes.map((cliente, i) => (
                         <tr key={i}>
-                          <td>{cliente.nome}</td>
-                          <td>{formatarMoeda(cliente.totalGasto)}</td>
-                          <td>{cliente.qtdRecibos}</td>
+                          <td>
+                            <div className={style.cliente_info}>
+                              <div className={style.cliente_nome}>
+                                {i === 0 && (
+                                  <span className={style.medalha}>🥇</span>
+                                )}
+                                {i === 1 && (
+                                  <span className={style.medalha}>🥈</span>
+                                )}
+                                {i === 2 && (
+                                  <span className={style.medalha}>🥉</span>
+                                )}
+                                <strong>{cliente.nome}</strong>
+                              </div>
+                              {cliente.email && (
+                                <div className={style.cliente_detalhes}>
+                                  <span>
+                                    <FaEnvelope className={style.icone} />{" "}
+                                    {cliente.email}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className={style.coluna_valor}>
+                            <span className={style.valor}>
+                              {formatarMoeda(cliente.totalGasto)}
+                            </span>
+                            {i === 0 && (
+                              <span className={style.destaque}>
+                                Maior cliente!
+                              </span>
+                            )}
+                          </td>
+                          <td className={style.coluna_quantidade}>
+                            <span className={style.quantidade}>
+                              {cliente.qtdRecibos}
+                            </span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -550,20 +650,63 @@ export function Relatorios() {
                     </div>
                   )}
 
-                  <Table striped bordered hover>
+                  <Table
+                    striped
+                    bordered
+                    hover
+                    className={style.tabela_produtos}
+                  >
                     <thead>
                       <tr>
                         <th>Produto</th>
-                        <th>Unidades Vendidas</th>
+                        <th className={style.coluna_quantidade}>
+                          Unidades Vendidas
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {relatorio.topProdutos.map((produto, i) => (
                         <tr key={i}>
                           <td>
-                            {produto.nome} ({produto.marca})
+                            <div className={style.produto_info}>
+                              <div className={style.produto_nome}>
+                                {i === 0 && (
+                                  <span className={style.medalha}>🥇</span>
+                                )}
+                                {i === 1 && (
+                                  <span className={style.medalha}>🥈</span>
+                                )}
+                                {i === 2 && (
+                                  <span className={style.medalha}>🥉</span>
+                                )}
+                                <strong>{produto.nome}</strong>
+                              </div>
+                              <div className={style.produto_detalhes}>
+                                {produto.marca && (
+                                  <span>
+                                    <FaTag className={style.icone} />{" "}
+                                    {produto.marca}
+                                  </span>
+                                )}
+                                {produto.modelo && (
+                                  <span>
+                                    <FaBarcode className={style.icone} />{" "}
+                                    {produto.modelo}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </td>
-                          <td>{produto.totalVendido}</td>
+                          <td className={style.coluna_quantidade}>
+                            <span className={style.quantidade}>
+                              {produto.totalVendido.toLocaleString()}
+                            </span>
+                            {i === 0 && (
+                              <span className={style.destaque}>
+                                Mais vendido!
+                              </span>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -571,12 +714,25 @@ export function Relatorios() {
                 </div>
 
                 <div className={style.relatorio_secao}>
-                  <h5>Destaques</h5>
-                  <ul>
+                  <h5>
+                    <FaStar className={style.icone_titulo} /> Insights Valiosos
+                  </h5>
+                  <div className={style.insights_container}>
                     {relatorio.insights.map((insight, i) => (
-                      <li key={i}>{insight}</li>
+                      <div key={i} className={style.insight_card}>
+                        <div className={style.insight_icone}>
+                          {insight.icone}
+                        </div>
+                        <div className={style.insight_conteudo}>
+                          <h6>{insight.titulo}</h6>
+                          <p className={style.insight_valor}>{insight.valor}</p>
+                          <p className={style.insight_descricao}>
+                            {insight.descricao}
+                          </p>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </>
             ) : null}

@@ -223,21 +223,20 @@
   }
   
   .botao_grafico {
-    background-color: #12af2c;
+    background-color: #2ecc71; /* Verde vibrante */
     color: white;
     border: none;
-    padding: 8px 15px;
-    border-radius: 24px;
+    padding: 8px 16px;
+    border-radius: 20px; /* Bordas mais arredondadas */
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
+  
   .botao_grafico:hover {
-    transform: scale(1.05);
+    background-color: #27ae60; /* Verde mais escuro */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   }
-
 .botao_pdf {
   background-color: #ffcc00;
   color: white;
@@ -265,11 +264,7 @@
   display: flex;
   gap: 10px;
 }
-  
-  .botao_grafico:hover {
-    background-color: #12af2c;
-  }
-  
+    
   .grafico_pizza {
     max-width: 400px;
     margin: 0 auto 20px;
@@ -477,4 +472,155 @@
         width: 100%;
         justify-content: center;
     }
+}
+.tabela_produtos {
+  font-size: 0.95em;
+}
+
+.produto_nome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.medalha {
+  font-size: 1.2em;
+}
+
+.produto_detalhes {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85em;
+  color: #555;
+  margin-top: 4px;
+}
+
+.icone {
+  margin-right: 4px;
+  opacity: 0.7;
+}
+
+.coluna_quantidade {
+  text-align: center;
+  vertical-align: middle;
+  width: 150px;
+}
+
+.quantidade {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #2c3e50;
+}
+
+.destaque {
+  display: block;
+  font-size: 0.8em;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+/* Adicione ao seu arquivo de estilo */
+.tabela_clientes {
+  font-size: 0.95em;
+}
+
+.cliente_info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cliente_nome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cliente_detalhes {
+  font-size: 0.85em;
+  color: #555;
+}
+
+.coluna_valor {
+  text-align: right;
+  vertical-align: middle;
+  width: 150px;
+}
+
+.valor {
+  font-weight: bold;
+  color: #27ae60; /* Verde para valores monetários */
+}
+
+/* Reaproveite estas classes do CSS anterior */
+.medalha {
+  font-size: 1.2em;
+}
+
+.icone {
+  margin-right: 4px;
+  opacity: 0.7;
+}
+
+.destaque {
+  display: block;
+  font-size: 0.8em;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+
+.coluna_quantidade {
+  text-align: center;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.quantidade {
+  font-weight: bold;
+}
+/* Estilos para a seção de insights */
+.insights_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.insight_card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #3498db;
+  display: flex;
+  gap: 12px;
+  transition: transform 0.2s;
+}
+
+.insight_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.insight_icone {
+  font-size: 1.5em;
+  color: #3498db;
+  margin-top: 4px;
+}
+
+.insight_conteudo h6 {
+  margin: 0 0 4px 0;
+  font-size: 0.9em;
+  color: #2c3e50;
+}
+
+.insight_valor {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.insight_descricao {
+  margin: 4px 0 0 0;
+  font-size: 0.85em;
+  color: #7f8c8d;
 }
