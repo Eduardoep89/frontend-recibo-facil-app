@@ -25,7 +25,9 @@ export function Registro() {
 
     try {
       await registrar(nome, email, senha);
-      navigate("/home"); // Adicione esta linha
+      // ✅ Mostra mensagem de sucesso e redireciona para o login
+      alert("Cadastro realizado com sucesso! Faça login para continuar.");
+      navigate("/login"); // Redireciona para a página de login
     } catch (error) {
       setErro(error.message || "Erro ao registrar");
     }

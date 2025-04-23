@@ -49,7 +49,8 @@ export function AuthProvider({ children }) {
     setLoading(true);
     try {
       await authService.registrar(nome, email, senha);
-      await login(email, senha);
+      // Removido o login automático
+      // await login(email, senha);  // ⚠️ Isso fazia o login direto
     } catch (error) {
       setError(error.message);
       throw error;
@@ -57,7 +58,6 @@ export function AuthProvider({ children }) {
       setLoading(false);
     }
   };
-
   const logout = async () => {
     setLoading(true);
     try {
