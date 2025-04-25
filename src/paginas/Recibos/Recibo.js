@@ -19,6 +19,7 @@ export function Recibos() {
   const ano = hoje.getFullYear();
   const dataFormatada = `${dia}-${mes}-${ano}`;
   const [data, setData] = useState(dataFormatada);
+  const [numeroPedido, setNumeroPedido] = useState(`PED${Date.now()}`);
 
   const [clientes, setClientes] = useState([]);
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
@@ -162,8 +163,11 @@ export function Recibos() {
     }
 
     try {
+      const novoNumeroPedido = `PED${Date.now()}`;
+      setNumeroPedido(novoNumeroPedido);
+
       const recibo = {
-        numeroPedido: `PED${Date.now()}`,
+        numeroPedido: novoNumeroPedido,
         data: new Date(data.split("-").reverse().join("-")).toISOString(),
         descricao: "Recibo de venda",
         clienteId: clienteSelecionado.id,
@@ -204,6 +208,7 @@ export function Recibos() {
     setProdutosFiltrados([]);
     setMostrarFiltro(true);
     setMostrarBotaoPDF(false);
+    setNumeroPedido(`PED${Date.now()}`);
   };
 
   const gerarPDF = () => {
@@ -281,7 +286,7 @@ export function Recibos() {
             <div className={style.camposSuperiores}>
               <div className={style.campoPedido}>
                 <label>N° Pedido:</label>
-                <input type="text" value={`PED${Date.now()}`} readOnly />
+                <input type="text" value={numeroPedido} readOnly />
               </div>
               <div className={style.campoData}>
                 <label>Data:</label>
